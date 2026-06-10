@@ -100,7 +100,6 @@ function selectDate(date) {
 
   // Se a data selecionada não estiver na lista padrão (ex: escolhida via calendário)
   if (!found) {
-    // Adiciona no início da lista para manter visível e renderiza novamente
     state.datesList.unshift(date);
     renderDateTimeline();
   }
@@ -123,7 +122,6 @@ function selectDate(date) {
 async function loadNewsForDate(date) {
   const isoString = formatISODate(date);
   
-  // Exibe o loader e limpa tela
   newsGrid.style.display = 'none';
   emptyState.style.display = 'none';
   loaderContainer.style.display = 'flex';
@@ -147,7 +145,6 @@ async function loadNewsForDate(date) {
  * @param {string} isoString 
  */
 function showEmptyState(isoString) {
-  // Ajuste de mensagem amigável com a data formatada em PT-BR
   const [year, month, day] = isoString.split('-');
   const formattedDateStr = `${day}/${month}/${year}`;
   
@@ -170,7 +167,16 @@ function renderNewsGrid(newsList) {
     const bentoClass = newsItem.impactLevel === 'Alto' ? 'bento-high' : '';
     card.className = `news-card ${impactClass} ${bentoClass}`;
     
-    // Conteúdo interno do card
+    // Estrutura do card com imagem (opcional)
+    let cardImageHTML = '';
+    if (newsItem.image) {
+      cardImageHTML = `
+        <div class="card-image-wrapper">
+          <img src="${newsItem.image}" alt="${newsItem.title}" class="card-image" loading="lazy">
+        </div>
+      `;
+    }
+    
     card.innerHTML = `
       <div class="card-header-tags">
         <span class="category-tag">${newsItem.category}</span>
@@ -178,6 +184,8 @@ function renderNewsGrid(newsList) {
           ${newsItem.impactLevel} Impacto
         </span>
       </div>
+      
+      ${cardImageHTML}
       
       <div class="card-body-content">
         <h3 class="card-title">${newsItem.title}</h3>
@@ -191,7 +199,6 @@ function renderNewsGrid(newsList) {
       </div>
     `;
     
-    // Clique para abrir modal
     card.addEventListener('click', () => openModal(newsItem));
     
     newsGrid.appendChild(card);
@@ -199,7 +206,7 @@ function renderNewsGrid(newsList) {
 }
 
 // ==========================================================================
-// CONTROLE DO MODAL DE DETALHES
+// CONTROLE DO MODAL DE DETALHES & DASHBOARD SVG
 // ==========================================================================
 
 /**
@@ -212,9 +219,33 @@ function openModal(newsItem) {
   document.getElementById('modalTitle').innerText = newsItem.title;
   document.getElementById('modalSummary').innerText = newsItem.executiveSummary;
   
+  // Imagem Hero do Modal
+  const heroWrapper = document.getElementById('modalHeroImageWrapper');
+  const heroImg = document.getElementById('modalHeroImage');
+  if (newsItem.image) {
+    heroImg.src = newsItem.image;
+    heroImg.alt = newsItem.title;
+    heroWrapper.style.display = 'block';
+  } else {
+    heroWrapper.style.display = 'none';
+  }
+  
   // Formatar análise investigativa (processa quebras de linha para parágrafos)
   const analysisText = newsItem.investigativeAnalysis || "Nenhuma análise aprofundada fornecida.";
   document.getElementById('modalAnalysis').innerHTML = analysisText.split('\n').map(p => `<p style="margin-bottom:12px;">${p}</p>`).join('');
+  
+  // Renderizar gráficos e mapas se for de impacto Alto ou Médio (Dashboard de Inteligência)
+  const intelSection = document.getElementById('modalIntelligenceSection');
+  const chartContainer = document.getElementById('modalChartContainer');
+  const mapContainer = document.getElementById('modalMapContainer');
+  
+  if (newsItem.impactLevel === 'Alto' || newsItem.impactLevel === 'Médio') {
+    intelSection.style.display = 'block';
+    renderSVGChart(chartContainer, newsItem);
+    renderSVGMap(mapContainer, newsItem);
+  } else {
+    intelSection.style.display = 'none';
+  }
   
   // Formatar Como Agir e Como Lucrar
   document.getElementById('modalHowToAct').innerHTML = formatTextList(newsItem.howToAct || "Nenhuma recomendação registrada.");
@@ -224,7 +255,6 @@ function openModal(newsItem) {
   const modalImpact = document.getElementById('modalImpact');
   modalImpact.innerText = `${newsItem.impactLevel} Impacto`;
   
-  // Limpar classes antigas de impacto e aplicar a correta
   modalImpact.className = 'modal-impact-badge';
   if (newsItem.impactLevel === 'Alto') {
     modalImpact.style.backgroundColor = 'var(--impact-high-bg)';
@@ -240,7 +270,6 @@ function openModal(newsItem) {
     modalImpact.style.setProperty('--impact-color', 'var(--impact-low)');
   }
   
-  // Injetar o ponto indicador colorido do badge usando folha de estilo inline dinâmica
   modalImpact.innerHTML = `<span class="material-symbols-rounded" style="font-size:12px; color:var(--impact-color);">fiber_manual_record</span> ${newsItem.impactLevel} Impacto`;
 
   // Exibir o modal
@@ -265,7 +294,6 @@ function closeModal() {
 function formatTextList(text) {
   if (text.includes('\n')) {
     const lines = text.split('\n').filter(line => line.trim().length > 0);
-    // Verifica se parece uma lista numerada (ex: "1. Item")
     if (/^\d+\./.test(lines[0])) {
       return `<ol>${lines.map(line => `<li>${line.replace(/^\d+\.\s*/, '')}</li>`).join('')}</ol>`;
     } else {
@@ -276,35 +304,191 @@ function formatTextList(text) {
 }
 
 // ==========================================================================
+// RENDERIZADORES GRÁFICOS SVG (DASHBOARD)
+// ==========================================================================
+
+/**
+ * Desenha um gráfico de barras SVG dinâmico baseado na categoria do relatório
+ * @param {HTMLElement} container 
+ * @param {Object} newsItem 
+ */
+function renderSVGChart(container, newsItem) {
+  let data = [];
+  
+  // Definir os eixos e valores com base na categoria para tornar o gráfico realista
+  if (newsItem.category === 'Eventos') {
+    data = [
+      { name: 'Gastronomia', value: 45, label: '+45%' },
+      { name: 'Hotelaria', value: 35, label: '+35%' },
+      { name: 'Varejo/Roupas', value: 20, label: '+20%' },
+      { name: 'Transporte', value: 30, label: '+30%' }
+    ];
+  } else if (newsItem.category === 'Concorrência') {
+    data = [
+      { name: 'Drogarias Locais', value: -12, label: '-12%' },
+      { name: 'Convenção', value: 10, label: '+10%' },
+      { name: 'Serviço Delivery', value: 25, label: '+25%' },
+      { name: 'Fidelização', value: 30, label: '+30%' }
+    ];
+  } else if (newsItem.category === 'Infraestrutura') {
+    data = [
+      { name: 'Comércio Local', value: -15, label: '-15%' },
+      { name: 'Serviço Delivery', value: 35, label: '+35%' },
+      { name: 'Logística Insumos', value: 20, label: '+20%' },
+      { name: 'Tráfego Pedestres', value: -8, label: '-8%' }
+    ];
+  } else {
+    data = [
+      { name: 'Varejo Centro', value: 15, label: '+15%' },
+      { name: 'Serviços B2B', value: 20, label: '+20%' },
+      { name: 'Mercado Imobiliário', value: 25, label: '+25%' },
+      { name: 'Geração Empregos', value: 30, label: '+30%' }
+    ];
+  }
+
+  const svgWidth = 340;
+  const svgHeight = 180;
+  
+  let barsHTML = '';
+  const barWidth = 36;
+  const gap = 38;
+  const startX = 48;
+  const zeroY = 130; // Coordenada Y da linha de 0%
+  const maxBarHeight = 90; // Altura máxima que representa o topo de 50%
+  
+  data.forEach((d, i) => {
+    const x = startX + i * (barWidth + gap);
+    
+    // Mapear valor para a altura da barra (50% = maxBarHeight pixels)
+    const barHeight = Math.abs(d.value) * (maxBarHeight / 50);
+    const isNegative = d.value < 0;
+    
+    const y = isNegative ? zeroY : zeroY - barHeight;
+    const color = isNegative ? '#b91c1c' : '#0353a4';
+    
+    barsHTML += `
+      <!-- Barra ${d.name} -->
+      <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="4" fill="${color}" opacity="0.85" class="chart-bar">
+        <title>${d.name}: ${d.label}</title>
+      </rect>
+      <!-- Texto do Eixo X -->
+      <text x="${x + barWidth/2}" y="${zeroY + 18}" font-size="7.5" font-family="'Inter', sans-serif" font-weight="600" fill="#475569" text-anchor="middle">${d.name}</text>
+      <!-- Texto do Valor da Barra -->
+      <text x="${x + barWidth/2}" y="${isNegative ? y + barHeight + 12 : y - 6}" font-size="8.5" font-family="'Inter', sans-serif" font-weight="700" fill="${color}" text-anchor="middle">${d.label}</text>
+    `;
+  });
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${svgWidth} ${svgHeight}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <!-- Linhas do Grid -->
+      <line x1="30" y1="40" x2="330" y2="40" stroke="rgba(15, 23, 42, 0.04)" stroke-width="1"/>
+      <line x1="30" y1="85" x2="330" y2="85" stroke="rgba(15, 23, 42, 0.04)" stroke-width="1"/>
+      <line x1="30" y1="130" x2="330" y2="130" stroke="rgba(15, 23, 42, 0.12)" stroke-width="1.5"/>
+      
+      <!-- Indicadores de Eixo Y -->
+      <text x="25" y="43" font-size="7" font-family="'Inter', sans-serif" font-weight="600" fill="#94a3b8" text-anchor="end">+50%</text>
+      <text x="25" y="88" font-size="7" font-family="'Inter', sans-serif" font-weight="600" fill="#94a3b8" text-anchor="end">+25%</text>
+      <text x="25" y="133" font-size="7" font-family="'Inter', sans-serif" font-weight="600" fill="#475569" text-anchor="end">0%</text>
+      
+      ${barsHTML}
+    </svg>
+  `;
+}
+
+/**
+ * Desenha um mapa vetorial SVG simplificado do centro de Itaúna e destaca o Hotspot
+ * @param {HTMLElement} container 
+ * @param {Object} newsItem 
+ */
+function renderSVGMap(container, newsItem) {
+  let hx = 150;
+  let hy = 80;
+  let locationLabel = "Centro";
+
+  const titleLower = newsItem.title.toLowerCase();
+  
+  // Mapeamento geográfico sutil baseado em palavras chave das matérias
+  if (titleLower.includes('praça') || titleLower.includes('matriz') || titleLower.includes('arraial') || titleLower.includes('festival')) {
+    hx = 95;
+    hy = 45;
+    locationLabel = "Praça da Matriz";
+  } else if (titleLower.includes('jove soares') || titleLower.includes('araújo') || titleLower.includes('prainha') || titleLower.includes('avenida')) {
+    hx = 200;
+    hy = 110;
+    locationLabel = "Av. Jove Soares";
+  } else if (titleLower.includes('santanense')) {
+    hx = 50;
+    hy = 140;
+    locationLabel = "Santanense";
+  }
+
+  container.innerHTML = `
+    <svg viewBox="0 0 340 180" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <rect width="340" height="180" fill="none"/>
+      
+      <!-- Córrego do Soldado (Canal da Prainha na Av. Jove Soares) -->
+      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="#bae6fd" stroke-width="6" opacity="0.7"/>
+      
+      <!-- Av. Jove Soares (Prainha) -->
+      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="rgba(3, 83, 164, 0.12)" stroke-width="14"/>
+      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 4"/>
+      
+      <!-- Rua Silva Jardim (Cruzamento Principal) -->
+      <path d="M 95,15 Q 150,75 220,175" fill="none" stroke="rgba(15, 23, 42, 0.08)" stroke-width="8"/>
+      
+      <!-- Rua Antônio de Corradi -->
+      <line x1="20" y1="75" x2="320" y2="75" stroke="rgba(15, 23, 42, 0.08)" stroke-width="6"/>
+      
+      <!-- Rua Manoel Gonçalves -->
+      <line x1="150" y1="15" x2="150" y2="175" stroke="rgba(15, 23, 42, 0.06)" stroke-width="5"/>
+
+      <!-- Praça da Matriz (Praça Dr. Augusto Gonçalves) -->
+      <rect x="70" y="25" width="50" height="35" rx="6" fill="rgba(15, 118, 110, 0.08)" stroke="rgba(15, 118, 110, 0.25)" stroke-width="1.5"/>
+      <text x="95" y="45" font-size="7" font-weight="800" fill="#0f766e" text-anchor="middle" font-family="'Inter', sans-serif">Praça da Matriz</text>
+      
+      <!-- Legendas de Ruas -->
+      <text x="260" y="55" font-size="6.5" font-weight="600" fill="#0353a4" transform="rotate(-30 260 55)" font-family="'Inter', sans-serif">Av. Jove Soares (Prainha)</text>
+      <text x="110" y="95" font-size="6" font-weight="600" fill="#64748b" transform="rotate(55 110 95)" font-family="'Inter', sans-serif">Rua Silva Jardim</text>
+      <text x="280" y="83" font-size="6.5" font-weight="600" fill="#64748b" font-family="'Inter', sans-serif">Rua A. Corradi</text>
+
+      <!-- Hotspot Pulsante Red -->
+      <circle cx="${hx}" cy="${hy}" r="16" fill="#ef4444" opacity="0.15" class="map-hotspot"/>
+      <circle cx="${hx}" cy="${hy}" r="8" fill="#ef4444" opacity="0.4" class="map-hotspot"/>
+      <circle cx="${hx}" cy="${hy}" r="3" fill="#ef4444"/>
+      
+      <!-- Painel do Hotspot -->
+      <g transform="translate(${hx + 10}, ${hy - 10})">
+        <rect x="0" y="0" width="70" height="15" rx="3" fill="#1e293b" opacity="0.9"/>
+        <text x="35" y="10" font-size="6" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="'Inter', sans-serif">${locationLabel}</text>
+      </g>
+    </svg>
+  `;
+}
+
+// ==========================================================================
 // CONFIGURAÇÃO DE EVENTOS
 // ==========================================================================
 function setupEventListeners() {
-  // Configurar clique do botão de calendário para acionar o input hidden
   calendarBtn.addEventListener('click', () => {
     hiddenDateInput.showPicker ? hiddenDateInput.showPicker() : hiddenDateInput.click();
   });
   
-  // Tratar alteração da data no calendário nativo
   hiddenDateInput.addEventListener('change', (e) => {
     if (e.target.value) {
-      // Ajustar string de data UTC para fuso local para evitar problemas de fuso no Date
       const [year, month, day] = e.target.value.split('-');
       const selectedDateObj = new Date(year, month - 1, day);
       selectDate(selectedDateObj);
     }
   });
 
-  // Fechar modal no botão fechar
   modalCloseBtn.addEventListener('click', closeModal);
 
-  // Fechar modal ao clicar fora do card (no overlay)
   newsModal.addEventListener('click', (e) => {
     if (e.target === newsModal) {
       closeModal();
     }
   });
 
-  // Fechar modal no teclado (ESC)
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && newsModal.classList.contains('active')) {
       closeModal();

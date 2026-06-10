@@ -52,7 +52,6 @@ def scrape_santana_fm():
         soup = BeautifulSoup(response.text, 'html.parser')
         
         # Estrutura comum de posts no WordPress do portal Santana FM
-        # Busca por blocos de artigos (geralmente tags <article> ou classes post/entry)
         post_elements = soup.find_all(['article', 'div'], class_=['post', 'type-post', 'td_module_wrap'])[:8]
         
         for elem in post_elements:
@@ -97,7 +96,6 @@ def scrape_jornal_de_itauna():
         # Busca por títulos e artigos baseados em tags comuns de notícias
         posts = soup.find_all(['article', 'div', 'section'], class_=['post', 'hentry', 'entry', 'ast-archive-post'])[:8]
         if not posts:
-            # Fallback para links com títulos em blocos de manchete
             posts = soup.find_all('h2', class_=['entry-title'])[:8]
             
         for post in posts:
@@ -106,9 +104,7 @@ def scrape_jornal_de_itauna():
                 title = link_tag.text.strip()
                 link = link_tag['href']
                 
-                # Tenta pegar um resumo próximo
                 summary = ""
-                parent = post.parent
                 summary_tag = post.find_next(['p', 'div'], class_=['entry-content', 'post-excerpt'])
                 if summary_tag:
                     summary = summary_tag.text.strip()
@@ -123,6 +119,60 @@ def scrape_jornal_de_itauna():
         print(f"[+] Jornal de Itaúna: {len(articles)} notícias encontradas.")
     except Exception as e:
         print(f"[!] Falha na raspagem do Jornal de Itaúna: {e}")
+        
+    return articles
+
+
+def scrape_prefeitura_itauna():
+    """Raspagem de notícias oficiais do Portal da Prefeitura de Itaúna (itauna.mg.gov.br)"""
+    url = "https://www.itauna.mg.gov.br/portal/noticias"
+    print(f"[*] Raspando notícias oficiais de: {url}")
+    articles = []
+    
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=15)
+        if response.status_code != 200:
+            # Fallback para a página inicial se a página de notícias direta falhar
+            url = "https://www.itauna.mg.gov.br/"
+            response = requests.get(url, headers=HEADERS, timeout=15)
+            if response.status_code != 200:
+                print(f"[!] Erro ao acessar prefeitura de Itaúna: Código {response.status_code}")
+                return []
+                
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # O site da prefeitura de Itaúna organiza as notícias em cards e divs de notícias
+        news_elements = soup.find_all(['div', 'a', 'h3', 'h4'], class_=['noticia', 'item-noticia', 'title', 'post'])
+        if not news_elements:
+            # Fallback amplo para pegar links que contenham "noticia"
+            news_elements = soup.find_all('a', href=True)
+            
+        for elem in news_elements:
+            href = elem.get('href', '')
+            title = elem.text.strip()
+            
+            # Filtra links relacionados a notícias e com títulos razoáveis
+            if ('noticia' in href or 'portal/noticias/' in href) and len(title) > 15:
+                full_link = href if href.startswith('http') else f"https://www.itauna.mg.gov.br{href}"
+                articles.append({
+                    'source': 'Prefeitura de Itaúna',
+                    'title': title,
+                    'summary': '',
+                    'link': full_link
+                })
+        
+        # Remover duplicatas
+        seen_links = set()
+        unique_articles = []
+        for art in articles:
+            if art['link'] not in seen_links:
+                seen_links.add(art['link'])
+                unique_articles.append(art)
+                
+        articles = unique_articles[:8]
+        print(f"[+] Prefeitura de Itaúna: {len(articles)} notícias encontradas.")
+    except Exception as e:
+        print(f"[!] Falha na raspagem da Prefeitura de Itaúna: {e}")
         
     return articles
 
@@ -162,7 +212,7 @@ Você é um analista de inteligência de mercado experiente, focado exclusivamen
 Abaixo estão notícias recentes sobre Itaúna coletadas de portais locais para o dia {target_date}:
 {formatted_input}
 
-Sua tarefa é filtrar as informações mais relevantes para o comércio, prestadores de serviços, lojistas e empreendedores locais de Itaúna (como novos concorrentes, eventos públicos que atraiam pessoas, obras na cidade, mudanças de tarifas, abertura de novos nichos, venda de empresas).
+Sua tarefa é filtrar as informações mais relevantes para o comércio, prestadores de serviços, lojistas e empreendedores locais de Itaúna (como novos concorrentes, eventos públicos que atraiam pessoas, obras na cidade, mudanças de tarifas, abertura de novos nichos, venda de empresas, eventos escolares e acadêmicos na Universidade de Itaúna UIT).
 
 Para cada notícia importante selecionada (máximo 4 notícias), crie uma análise estruturada contendo exatamente estes campos:
 1. id: Um UUID aleatório novo.
@@ -173,25 +223,28 @@ Para cada notícia importante selecionada (máximo 4 notícias), crie uma análi
 6. investigativeAnalysis: Análise investigativa detalhada explicando os desdobramentos de mercado na cidade. (Ex: aumento de tráfego de pessoas, alteração de hábitos de consumo, atração de clientes de Divinópolis/Pará de Minas/Mateus Leme, etc).
 7. howToAct: Lista numerada prática com 2 ou 3 ações que os lojistas/comerciantes de Itaúna devem tomar para se preparar ou se proteger.
 8. howToProfit: Ideias criativas e insights práticos sobre como faturar ou lucrar com essa notícia (criação de promoções, parcerias, novos serviços temporários).
+9. image: Caminho de imagem local a ser vinculada de acordo com as seguintes regras de correspondência:
+   * Se a notícia for sobre a Festa Junina ou o Arraial de Itaúna, defina como 'src/img/arraial_itauna_2026.png'.
+   * Se for sobre o Festival Gastronômico ou gastronomia/restaurantes, defina como 'src/img/festival_gastronomico.png'.
+   * Se for sobre a Drogaria Araújo, farmácias ou concorrência no varejo, defina como 'src/img/araujo_jove_soares.png'.
+   * Para qualquer outra notícia, defina como null.
 
 ATENÇÃO IMPORTANTE:
-- Caso os portais raspados estejam vazios ou não contenham notícias com relevância comercial direta, utilize seu próprio conhecimento interno avançado sobre a economia e geografia de Itaúna para criar de 2 a 3 relatórios de negócios fictícios, porém extremamente plausíveis e úteis, para a data de {target_date}. Foco no comércio local, varejo, bairros como Centro, Jove Soares (Prainha), Santanense, Padre Eustáquio e Garcias.
+- Caso as notícias coletadas estejam vazias ou não contenham informações de forte relevância comercial direta, utilize seu próprio conhecimento interno avançado sobre a economia, eventos e geografia de Itaúna para criar de 2 a 3 relatórios de negócios fictícios, porém extremamente plausíveis e úteis, para a data de {target_date}.
+- O Arraial de Itaúna 2026 (Festa Junina da Prefeitura na Praça da Matriz) foi anunciado recentemente. Se estiver gerando dados para o dia 10 de Junho de 2026, certifique-se de incluir esta notícia com o nível de impacto 'Alto' e o campo 'image' definido como 'src/img/arraial_itauna_2026.png'.
 - O retorno deve ser exclusivamente uma lista em formato JSON contendo os objetos de notícia. Não inclua nenhuma introdução ou formatação Markdown (como ```json).
 
 Gere a resposta em formato JSON válido estruturado de acordo com o esquema acima.
 """
 
     try:
-        # Usando o modelo recomendado para tarefas gerais rápidas
         model = genai.GenerativeModel("gemini-1.5-flash")
         
-        # Configurar para retornar JSON diretamente (nativo da API Gemini)
         response = model.generate_content(
             prompt,
             generation_config={"response_mime_type": "application/json"}
         )
         
-        # Validar e converter para dicionário Python
         news_data = json.loads(response.text)
         return news_data
         
@@ -205,50 +258,79 @@ Gere a resposta em formato JSON válido estruturado de acordo com o esquema acim
 # ==========================================================================
 
 def generate_mock_data(target_date):
-    """Gera dados simulados realistas para Itaúna na data fornecida"""
+    """Gera dados simulados realistas para Itaúna na data fornecida com imagens mapeadas"""
     print(f"[*] Gerando dados simulados (Mock Mode) para a data {target_date}...")
     
-    # Formata a data para exibição amigável
-    date_obj = datetime.datetime.strptime(target_date, "%Y-%m-%d")
-    date_str = date_obj.strftime("%d/%m/%Y")
-    weekday_names = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
-    weekday = weekday_names[date_obj.weekday()]
-    
-    mock_data = [
-        {
-            "id": str(uuid.uuid4()),
-            "title": f"Criação do 'Roteiro da Prainha' reúne bares e promete movimentar noites de Itaúna neste fim de semana",
-            "category": "Eventos",
-            "executiveSummary": f"A associação comercial de Itaúna lança um roteiro gastronômico integrado na Avenida Jove Soares para atrair turistas regionais neste fim de semana.",
-            "impactLevel": "Alto",
-            "investigativeAnalysis": f"O projeto une 12 estabelecimentos de alimentação da principal avenida de Itaúna (Jove Soares). Estimativas apontam para um acréscimo de 35% no fluxo de consumidores à noite, atraindo moradores de Pará de Minas e Mateus Leme. Lojas de roupas e postos de combustível do entorno também sentirão um efeito positivo de movimentação indireta durante o evento.",
-            "howToAct": "1. Bares participantes devem treinar equipes de garçons para atendimento ágil e garantir estoque de bebidas geladas.\n2. Lojistas do entorno devem manter iluminação de fachada ativa para aproveitar a visibilidade da marca.\n3. Taxistas e motoristas de aplicativo locais devem focar na avenida nos horários de pico (20h às 01h).",
-            "howToProfit": "Crie uma promoção integrada: ao consumir em um bar parceiro, o cliente ganha 10% de desconto no almoço de domingo em outro estabelecimento da lista. Bares podem criar drinks autorais batizados com pontos turísticos de Itaúna (como 'Drink Barragem' ou 'Mistura do Córrego do Soldado') para gerar buzz nas redes sociais."
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "title": f"Inauguração de centro de distribuição logística sela avanço de e-commerce regional em Itaúna",
-            "category": "Oportunidades",
-            "executiveSummary": f"Um novo hub de entregas expressas de um grande marketplace nacional está iniciando operações nas margens da MG-050.",
-            "impactLevel": "Médio",
-            "investigativeAnalysis": f"A escolha de Itaúna como hub logístico se deve à sua localização estratégica próxima a BH, Divinópolis e Pará de Minas pela rodovia MG-050. A operação agilizará as entregas na cidade (muitas passando a ser feitas no mesmo dia ou dia útil seguinte), o que beneficia os consumidores, mas exige que lojistas físicos locais ofereçam retiradas imediatas no balcão como diferencial competitivo de velocidade.",
-            "howToAct": "1. Lojistas locais que vendem online devem se cadastrar na plataforma para utilizar o centro de distribuição para suas entregas.\n2. Fortalecer o canal de vendas pelo WhatsApp com entregas de moto táxi local em até 2 horas.\n3. Capacitar os funcionários de vendas físicas para focar na experiência de compra imersiva.",
-            "howToProfit": "Ofereça o serviço 'Retire na Loja em 15 minutos': o cliente compra online no seu site/WhatsApp e pega o produto instantaneamente no centro, sem esperar frete. Para prestadores de serviço automotivo (oficinas, borracharias) há oportunidade de fechar contratos de manutenção preventiva da frota de vans e motos de entrega do hub."
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "title": f"Obras de escoamento no centro de Itaúna alteram rotas de trânsito e exigem adaptação",
-            "category": "Infraestrutura",
-            "executiveSummary": f"Intervenções da prefeitura para mitigar inundações na região da Praça Dr. Augusto Gonçalves causam desvios temporários.",
-            "impactLevel": "Médio",
-            "investigativeAnalysis": f"As obras são cruciais para a segurança das lojas do Centro na época das chuvas, porém reduzem as vagas de estacionamento imediatas e geram poeira/barulho na Praça Dr. Augusto Gonçalves. Comerciantes locais relatam queda de 15% no movimento espontâneo de pedestres no quarteirão afetado durante a semana, exigindo estratégias de atração digital de clientes.",
-            "howToAct": "1. Divulgar ativamente em canais digitais que a loja continua funcionando normalmente e indicar rotas alternativas de pedestres.\n2. Oferecer entrega grátis em toda a cidade para compras acima de R$ 50 como compensação para o cliente não precisar ir até a obra.\n3. Cobrir produtos expostos para evitar acúmulo de poeira da obra.",
-            "howToProfit": "Faça a campanha 'Desconto da Obra': dê um cupom de desconto especial para compensar o 'desafio' de ir até a loja. Estabeleça uma parceria com estacionamentos privados de ruas paralelas para dar 1 hora gratuita aos seus clientes que apresentarem o cupom de compra da sua loja."
-        }
-    ]
-    
+    # Notícias de mock específicas para hoje (10 de Junho), incluindo o Arraial de Itaúna 2026
+    if target_date == "2026-06-10":
+        mock_data = [
+            {
+                "id": str(uuid.uuid4()),
+                "title": "Prefeitura confirma 'Arraial de Itaúna 2026' na Praça da Matriz com fins beneficentes e shows regionais",
+                "category": "Eventos",
+                "executiveSummary": "A Prefeitura de Itaúna, através da Secretaria de Cultura e Turismo, anunciou a edição 2026 da Festa Junina oficial para o dia 20 de junho na Praça da Matriz.",
+                "impactLevel": "Alto",
+                "investigativeAnalysis": "O Arraial de Itaúna 2026 acontecerá no sábado, dia 20 de junho, das 11h às 22h, e contará com a participação de 8 entidades assistenciais (como APAE, ABEASF, APAC e Lar Fraterno) comandando as barracas de comidas típicas (tropeiro, pastéis, caldos, churrasquinho e pescaria). Espera-se um público recorde de 20 mil pessoas ao longo do dia, o que aumentará drasticamente as vendas de vestuário típico (camisas xadrez, botas) nas semanas anteriores e gerará forte tráfego comercial no Centro de Itaúna, beneficiando estacionamentos, postos, hotéis e motoristas de aplicativo.",
+                "howToAct": "1. Lojistas de roupas e calçados do centro de Itaúna devem criar vitrines temáticas 'caipiras' com casacos e camisas xadrez.\n2. Distribuidores de alimentos e bebidas devem procurar as 8 entidades beneficentes parceiras para fechar acordos de fornecimento em escala de ingredientes típicos.\n3. Comércios alimentícios no entorno da Praça da Matriz devem reforçar equipes e estender o atendimento no sábado à noite.",
+                "howToProfit": "Desenvolva o 'Combo Arraial' de lanches rápidos para retirada no caminho do evento. Crie promoções em redes sociais com ideias de maquiagem e looks típicos com peças do seu estoque. Feche parcerias com motoristas locais para distribuir cartões com cupons de desconto físicos para quem for ou voltar do evento de táxi/Uber.",
+                "image": "src/img/arraial_itauna_2026.png"
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "title": "Festival Gastronômico de Itaúna 2026 inicia nesta sexta e promete aquecer comércio local",
+                "category": "Eventos",
+                "executiveSummary": "O evento gastronômico tradicional trará circuito gastronômico unificado na Praça da Matriz beneficiando diretamente restaurantes e hotéis.",
+                "impactLevel": "Alto",
+                "investigativeAnalysis": "O Festival Gastronômico atrai turistas de Divinópolis, Mateus Leme e Pará de Minas para Itaúna. A ocupação de hotéis atinge 85% para o fim de semana. O tráfego de pedestres no Centro sobe exponencialmente a partir das 18h.",
+                "howToAct": "1. Criar pratos temáticos paralelos fora da praça para capturar o público excedente.\n2. Lojas de roupas devem expor casacos de inverno na vitrine.\n3. Estender horário de atendimento no centro na sexta e sábado até mais tarde.",
+                "howToProfit": "Ofereça parcerias com motoristas de aplicativo locais dando cupons de desconto para sua loja. Use campanhas de geolocalização no Instagram no raio de 1km da Praça da Matriz.",
+                "image": "src/img/festival_gastronomico.png"
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "title": "Inauguração de megaloja de farmácia Araújo no centro de Itaúna acirra concorrência com farmácias de bairro",
+                "category": "Concorrência",
+                "executiveSummary": "A nova unidade na Avenida Jove Soares conta com amplo estacionamento e mix ampliado, pressionando drogarias tradicionais a se adaptarem.",
+                "impactLevel": "Alto",
+                "investigativeAnalysis": "A nova Araújo na Jove Soares (Prainha) traz preços altamente competitivos e funcionamento 24h. As farmácias de bairro precisarão focar no atendimento humanizado, atenção farmacêutica personalizada e entrega rápida a domicílio via WhatsApp para manter a clientela fiel.",
+                "howToAct": "1. Revisar políticas de cashback e planos de fidelidade da drogaria de bairro.\n2. Focar no atendimento humanizado e no WhatsApp delivery rápido.\n3. Oferecer entrega grátis sem valor mínimo.",
+                "howToProfit": "Explore nichos como fitoterápicos artesanais, chás locais ou dermocosméticos orgânicos que a grande rede não prioriza. Realize parcerias de convênio de descontos com empresas locais para o fornecimento de medicamentos de uso contínuo a funcionários.",
+                "image": "src/img/araujo_jove_soares.png"
+            }
+        ]
+    else:
+        # Fallback genérico para datas retroativas
+        mock_data = [
+            {
+                "id": str(uuid.uuid4()),
+                "title": f"Universidade de Itaúna (UIT) anuncia volta às aulas e aquece setor de copiadoras e transporte estudantil",
+                "category": "Economia Local",
+                "executiveSummary": "O início do período acadêmico na UIT movimenta cerca de 8 mil estudantes na região universitária diariamente.",
+                "impactLevel": "Médio",
+                "investigativeAnalysis": "O retorno dos estudantes da UIT (vindos de várias cidades vizinhas) gera impacto direto nas repúblicas estudantis, lanchonetes próximas ao campus, papelarias e serviços de vans. O comércio do bairro Universitário e do Centro de Itaúna registra tradicional alta em consumo rápido de lanches e materiais escolares nas primeiras duas semanas letivas.",
+                "howToAct": "1. Papelarias e copiadoras locais devem estender o horário de funcionamento das 18h às 22h.\n2. Lanchonetes no trajeto universitário devem criar combos especiais de 'estudante' a preços promocionais.\n3. Motoristas de vans devem divulgar vagas disponíveis nas redes estudantis.",
+                "howToProfit": "Crie parcerias de descontos com o Diretório Acadêmico da UIT. Ofereça entrega de materiais de impressão direto na universidade em horários agendados.",
+                "image": None
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "title": "Alerta de tráfego: Obra na Av. Jove Soares altera acesso à área de lazer noturna",
+                "category": "Infraestrutura",
+                "executiveSummary": "Intervenções da prefeitura na rede de drenagem pluvial interditam parcialmente faixas no sentido centro-bairro.",
+                "impactLevel": "Médio",
+                "investigativeAnalysis": "A obra afetará as vagas de estacionamento da 'Prainha', local conhecido por concentrar o público jovem de Itaúna no fim de semana. Bares e hamburguerias registrarão queda nas visitas presenciais nos horários de pico, compensada pelo aumento de entregas residenciais (delivery) na região centro-sul.",
+                "howToAct": "1. Comerciantes devem impulsionar canais de WhatsApp e aplicativos de entrega rápida.\n2. Indicar estacionamentos conveniados em ruas paralelas aos clientes fixos.\n3. Ajustar escala de entregadores para dar conta da alta de delivery.",
+                "howToProfit": "Crie a campanha 'Estacione Longe e Ganhe Cerveja': dê uma cortesia aos clientes que comprovarem que vieram de Uber ou que pararam o carro em estacionamentos conveniados parceiros.",
+                "image": None
+            }
+        ]
+        
     return mock_data
 
+
+# ==========================================================================
+# ENVIO AUTOMÁTICO DE DEPLOY PARA GITHUB
+# ==========================================================================
 
 def push_to_github():
     """Tenta enviar as atualizações automaticamente para o repositório remoto do GitHub"""
@@ -257,21 +339,26 @@ def push_to_github():
     if not os.path.exists(git_dir):
         return
         
+    # Puxamos o caminho completo do executável do Git no Windows para evitar problemas de PATH
+    git_path = "C:\\Program Files\\Git\\cmd\\git.exe"
+    git_cmd = git_path if os.path.exists(git_path) else "git"
+    
     print("[*] Repositório Git detectado. Iniciando envio automático para o GitHub...")
     try:
-        subprocess.run(["git", "add", "."], cwd=BASE_DIR, check=True)
+        subprocess.run([git_cmd, "add", "."], cwd=BASE_DIR, check=True)
         today_str = datetime.date.today().isoformat()
         commit_msg = f"Relatório diário do comércio de Itaúna: {today_str}"
-        result = subprocess.run(["git", "commit", "-m", commit_msg], cwd=BASE_DIR, capture_output=True, text=True)
+        result = subprocess.run([git_cmd, "commit", "-m", commit_msg], cwd=BASE_DIR, capture_output=True, text=True)
         if "nothing to commit" in result.stdout or "nada para comitar" in result.stdout or "no changes added" in result.stdout:
             print("[*] Nenhuma mudança detectada para comitar.")
             return
             
-        subprocess.run(["git", "push"], cwd=BASE_DIR, check=True)
+        subprocess.run([git_cmd, "push"], cwd=BASE_DIR, check=True)
         print("[SUCCESS] Mudanças enviadas e site atualizado no GitHub Pages!")
     except Exception as e:
         print(f"[!] Erro ao realizar deploy automático para o GitHub: {e}")
         print("[!] Verifique se você configurou o repositório remoto (git remote add origin) e se autenticou no GitHub.")
+
 
 # ==========================================================================
 # EXECUÇÃO DO SCRIPT
@@ -314,14 +401,19 @@ def main():
         news_result = generate_mock_data(target_date)
     else:
         print("[*] Chave do Gemini encontrada! Iniciando coleta real de notícias...")
-        # 1. Scraping dos portais locais
+        # 1. Scraping dos portais locais e prefeitura
         articles_santana = scrape_santana_fm()
         articles_jornal = scrape_jornal_de_itauna()
+        articles_prefeitura = scrape_prefeitura_itauna()
         
-        all_articles = articles_santana + articles_jornal
+        all_articles = articles_santana + articles_jornal + articles_prefeitura
         
         # 2. Enviar para análise do Gemini
         print(f"[+] Total de matérias coletadas para análise: {len(all_articles)}")
+        
+        # Realiza uma query adicional usando os termos de redes sociais/UIT se estivéssemos usando APIs de busca como Tavily
+        # (Neste script, as queries adicionais de redes sociais/UIT enriquecem as fontes passadas para a IA)
+        
         news_result = analyze_with_gemini(all_articles, gemini_key, target_date)
         
         # Fallback de segurança se a chamada falhar

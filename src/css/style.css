@@ -1,54 +1,63 @@
 /* ==========================================================================
    DESIGN SYSTEM - ITAÚNA NEGÓCIOS
-   Aparência: Light Glassmorphism (Estilo Apple, Tons Azuis)
+   Aparência: Editorial Moderno & Liquid Glass (Tons de Azul Claro)
    ========================================================================== */
 
 :root {
-  /* Cores Temáticas */
-  --bg-primary: #f0f6fa;
-  --bg-gradient-start: #e0f2fe; /* Azul Celeste Claro */
-  --bg-gradient-middle: #f1f5f9; /* Cinza-azulado Neutro */
-  --bg-gradient-end: #dbeafe; /* Azul Suave */
+  /* Cores Temáticas - Paleta Azul Editorial */
+  --bg-primary: #f2f7fb; /* Azul Claro Muito Suave (Papel Moderno) */
+  --bg-gradient-start: #e4eff8; /* Azul Celeste Pastel */
+  --bg-gradient-middle: #f5f8fb;
+  --bg-gradient-end: #dbeafe;
   
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-bg-hover: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.45);
-  --glass-shadow: rgba(15, 23, 42, 0.06);
-  --glass-shadow-hover: rgba(15, 23, 42, 0.12);
+  /* Efeito Liquid Glass (Vidro Translúcido Refrativo) */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg-hover: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-border-hover: rgba(2, 132, 199, 0.15);
+  --glass-shadow: rgba(15, 23, 42, 0.04);
+  --glass-shadow-hover: rgba(15, 23, 42, 0.08);
   
-  --primary: #0284c7; /* Azul Principal Apple */
-  --primary-hover: #0369a1;
-  --primary-light: rgba(2, 132, 199, 0.1);
+  /* Cores de Destaque */
+  --primary: #0353a4; /* Azul Escuro Editorial */
+  --primary-hover: #002855;
+  --primary-light: rgba(3, 83, 164, 0.06);
   --accent: #2563eb;
   
   /* Cores de Texto */
-  --text-primary: #0f172a; /* Slate 900 (Alto Contraste) */
+  --text-primary: #1e293b; /* Slate 800 (Alto Contraste) */
   --text-secondary: #475569; /* Slate 600 */
   --text-muted: #64748b; /* Slate 500 */
   
   /* Níveis de Impacto */
-  --impact-high: #e11d48; /* Vermelho/Rosa para Alto Impacto */
-  --impact-high-bg: rgba(225, 29, 72, 0.08);
-  --impact-medium: #d97706; /* Laranja para Médio Impacto */
-  --impact-medium-bg: rgba(217, 119, 6, 0.08);
-  --impact-low: #059669; /* Verde para Baixo Impacto */
-  --impact-low-bg: rgba(5, 150, 105, 0.08);
+  --impact-high: #b91c1c; /* Vermelho Escuro Editorial */
+  --impact-high-bg: rgba(185, 28, 28, 0.06);
+  --impact-medium: #c2410c; /* Laranja Escuro */
+  --impact-medium-bg: rgba(194, 65, 12, 0.06);
+  --impact-low: #0f766e; /* Azul Esverdeado */
+  --impact-low-bg: rgba(15, 118, 110, 0.06);
 
-  /* Fontes e Tamanhos */
-  --font-title: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Tipografia Clássica de Jornal */
+  --font-title: 'Playfair Display', Georgia, Cambria, serif;
+  --font-subtitle: 'Lora', Georgia, serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   
-  /* Layout */
-  --border-radius-sm: 10px;
-  --border-radius-md: 16px;
-  --border-radius-lg: 24px;
-  --border-radius-xl: 32px;
+  /* Bordas e Cantos (Pontas Arredondadas) */
+  --border-radius-sm: 8px;
+  --border-radius-md: 14px;
+  --border-radius-lg: 20px;
+  --border-radius-xl: 26px;
+  
+  /* Linhas Editoriais (Fios) */
+  --divider-thin: 1px solid rgba(15, 23, 42, 0.08);
+  --divider-double: 3px double rgba(15, 23, 42, 0.15);
+  
   --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15);
 }
 
 /* ==========================================================================
-   RESET & CONFIGURAÇÕES GERAIS
+   RESET & ESTILOS GERAIS
    ========================================================================== */
 
 * {
@@ -67,7 +76,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Ocultar elementos acessíveis apenas para leitores de tela */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -81,7 +89,7 @@ body {
 }
 
 /* ==========================================================================
-   FUNDO FLUIDO ANIMADO (Apple Aesthetics)
+   FUNDO FLUIDO (Liquid Light Blue)
    ========================================================================== */
 
 .fluid-background {
@@ -96,8 +104,8 @@ body {
     var(--bg-gradient-middle), 
     var(--bg-gradient-end)
   );
-  background-size: 400% 400%;
-  animation: fluidGradient 20s ease infinite;
+  background-size: 300% 300%;
+  animation: fluidGradient 25s ease infinite;
 }
 
 @keyframes fluidGradient {
@@ -107,74 +115,82 @@ body {
 }
 
 /* ==========================================================================
-   CONTAINER E LAYOUT
+   CONTAINER E CABEÇALHO EDITORIAL
    ========================================================================== */
 
 .app-container {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 16px 64px 16px;
+  padding: 30px 20px 80px 20px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Cabeçalho Apple Translucent */
+/* Cabeçalho estilo Jornal Clássico Impresso com toque Liquid Glass */
 .app-header {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(25px) saturate(140%);
+  -webkit-backdrop-filter: blur(25px) saturate(140%);
   border: 1px solid var(--glass-border);
   box-shadow: 0 4px 30px var(--glass-shadow);
   border-radius: var(--border-radius-lg);
-  padding: 24px;
-  margin-bottom: 24px;
+  padding: 32px 32px 20px 32px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  text-align: center;
+  position: relative;
 }
 
-.brand-info {
+.header-content {
+  width: 100%;
+  border-top: var(--divider-double);
+  border-bottom: var(--divider-double);
+  padding: 16px 0;
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
 }
 
 .brand-tag {
-  font-family: var(--font-title);
-  font-size: 0.75rem;
+  font-family: var(--font-subtitle);
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   color: var(--primary);
 }
 
 .brand-title {
   font-family: var(--font-title);
-  font-size: 2.2rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
-  background: linear-gradient(135deg, var(--text-primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: #002855;
+  margin: 4px 0;
 }
 
 .brand-subtitle {
+  font-family: var(--font-subtitle);
   font-size: 0.95rem;
+  font-style: italic;
   color: var(--text-secondary);
-  font-weight: 400;
 }
 
 /* ==========================================================================
-   DATE CAROUSEL (Linha do tempo horizontal)
+   DATE CAROUSEL (Timeline de Abas)
    ========================================================================== */
 
 .date-timeline-container {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 12px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: var(--divider-thin);
   padding-top: 16px;
 }
 
@@ -185,12 +201,10 @@ body {
   scroll-behavior: smooth;
   flex-grow: 1;
   padding: 4px 0;
-  /* Ocultar barra de rolagem no Firefox e IE */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-/* Ocultar barra de rolagem no Chrome/Safari */
 .date-timeline::-webkit-scrollbar {
   display: none;
 }
@@ -201,72 +215,62 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 68px;
   border-radius: var(--border-radius-md);
-  border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  background: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   user-select: none;
   transition: var(--transition-smooth);
 }
 
 .date-item:hover {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
 }
 
 .date-item-weekday {
-  font-size: 0.7rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
   text-transform: uppercase;
   font-weight: 600;
   color: var(--text-muted);
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
 }
 
 .date-item-day {
   font-family: var(--font-title);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 700;
   color: var(--text-primary);
+  line-height: 1.1;
+  margin: 2px 0;
 }
 
 .date-item-month {
+  font-family: var(--font-body);
   font-size: 0.65rem;
   font-weight: 500;
   color: var(--text-muted);
 }
 
-/* Estado Ativo (Pílula Apple) */
+/* Pílula Ativa (Apple Style no Jornal) */
 .date-item.active {
   background: var(--primary);
   border-color: var(--primary);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.25);
+  box-shadow: 0 8px 16px rgba(3, 83, 164, 0.2);
 }
 
-.date-item.active .date-item-weekday {
-  color: rgba(255, 255, 255, 0.8);
-}
+.date-item.active .date-item-weekday { color: rgba(255, 255, 255, 0.85); }
+.date-item.active .date-item-day { color: #ffffff; }
+.date-item.active .date-item-month { color: rgba(255, 255, 255, 0.85); }
 
-.date-item.active .date-item-day {
-  color: #ffffff;
-}
-
-.date-item.active .date-item-month {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-/* Botão de Calendário */
-.date-picker-wrapper {
-  position: relative;
-}
-
+/* Calendário */
 .calendar-btn {
-  width: 50px;
-  height: 72px;
+  width: 52px;
+  height: 68px;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--glass-border);
   background: var(--glass-bg);
@@ -276,18 +280,11 @@ body {
   align-items: center;
   justify-content: center;
   transition: var(--transition-smooth);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
 }
 
 .calendar-btn:hover {
   background: var(--glass-bg-hover);
-  color: var(--primary-hover);
   transform: scale(1.03);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.calendar-btn .material-symbols-rounded {
-  font-size: 24px;
 }
 
 .hidden-date-input {
@@ -302,7 +299,7 @@ body {
 }
 
 /* ==========================================================================
-   CONTEÚDO PRINCIPAL & BENTO GRID
+   GRID BENTO BOX EDITORIAL
    ========================================================================== */
 
 .main-content {
@@ -311,12 +308,11 @@ body {
   flex-direction: column;
 }
 
-/* Grid Bento Box */
 .news-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
-  padding: 8px 0;
+  gap: 24px;
+  padding: 10px 0;
 }
 
 @media (min-width: 768px) {
@@ -331,15 +327,15 @@ body {
   }
 }
 
-/* Estilo do Card individual (Glassmorphism) */
+/* Estilo do Card (Jornal + Liquid Glass) */
 .news-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(15px) saturate(160%);
-  -webkit-backdrop-filter: blur(15px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
   border: 1px solid var(--glass-border);
   border-radius: var(--border-radius-lg);
   padding: 24px;
-  box-shadow: 0 4px 20px var(--glass-shadow);
+  box-shadow: 0 4px 25px var(--glass-shadow);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -348,27 +344,38 @@ body {
   transition: var(--transition-spring);
   position: relative;
   overflow: hidden;
-  animation: fadeIn 0.5s ease forwards;
-}
-
-.news-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: transparent;
-  transition: var(--transition-smooth);
+  animation: fadeIn 0.4s ease forwards;
 }
 
 .news-card:hover {
   background: var(--glass-bg-hover);
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 12px 30px var(--glass-shadow-hover);
+  border-color: var(--glass-border-hover);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px var(--glass-shadow-hover);
 }
 
-/* Tags de Categorias e Impacto */
+/* Imagem no Card */
+.card-image-wrapper {
+  width: 100%;
+  height: 170px;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-smooth);
+}
+
+.news-card:hover .card-image {
+  transform: scale(1.04);
+}
+
+/* Tags e Badges */
 .card-header-tags {
   display: flex;
   justify-content: space-between;
@@ -376,17 +383,20 @@ body {
 }
 
 .category-tag {
-  font-size: 0.75rem;
+  font-family: var(--font-subtitle);
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--primary);
   background: var(--primary-light);
   padding: 4px 10px;
   border-radius: 9999px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(3, 83, 164, 0.1);
 }
 
 .impact-badge {
+  font-family: var(--font-body);
   font-size: 0.72rem;
   font-weight: 600;
   padding: 4px 8px;
@@ -404,54 +414,33 @@ body {
   display: inline-block;
 }
 
-/* Variações de Impacto nos Cards */
-.news-card.impact-high::before {
-  background: var(--impact-high);
-}
-.news-card.impact-high .impact-badge {
-  color: var(--impact-high);
-  background: var(--impact-high-bg);
-}
-.news-card.impact-high .impact-badge::before {
-  background: var(--impact-high);
-}
+/* Níveis de Impacto */
+.news-card.impact-high { border-top: 3px solid var(--impact-high); }
+.news-card.impact-high .impact-badge { color: var(--impact-high); background: var(--impact-high-bg); }
+.news-card.impact-high .impact-badge::before { background: var(--impact-high); }
 
-.news-card.impact-medium::before {
-  background: var(--impact-medium);
-}
-.news-card.impact-medium .impact-badge {
-  color: var(--impact-medium);
-  background: var(--impact-medium-bg);
-}
-.news-card.impact-medium .impact-badge::before {
-  background: var(--impact-medium);
-}
+.news-card.impact-medium { border-top: 3px solid var(--impact-medium); }
+.news-card.impact-medium .impact-badge { color: var(--impact-medium); background: var(--impact-medium-bg); }
+.news-card.impact-medium .impact-badge::before { background: var(--impact-medium); }
 
-.news-card.impact-low::before {
-  background: var(--impact-low);
-}
-.news-card.impact-low .impact-badge {
-  color: var(--impact-low);
-  background: var(--impact-low-bg);
-}
-.news-card.impact-low .impact-badge::before {
-  background: var(--impact-low);
-}
+.news-card.impact-low { border-top: 3px solid var(--impact-low); }
+.news-card.impact-low .impact-badge { color: var(--impact-low); background: var(--impact-low-bg); }
+.news-card.impact-low .impact-badge::before { background: var(--impact-low); }
 
-/* Título e Resumo do Card */
+/* Título e Texto */
 .card-body-content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   flex-grow: 1;
 }
 
 .card-title {
   font-family: var(--font-title);
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.35;
-  color: var(--text-primary);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #0f172a;
   transition: var(--transition-smooth);
 }
 
@@ -460,7 +449,8 @@ body {
 }
 
 .card-summary {
-  font-size: 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
   line-height: 1.5;
   color: var(--text-secondary);
   display: -webkit-box;
@@ -474,9 +464,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  border-top: var(--divider-thin);
   padding-top: 12px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--primary);
 }
@@ -485,107 +475,44 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
-  transition: var(--transition-smooth);
+  font-family: var(--font-subtitle);
 }
 
 .news-card:hover .read-more-text {
   transform: translateX(4px);
 }
 
-/* ==========================================================================
-   REGRAS BENTO BOX (Tamanhos Alternados)
-   ========================================================================== */
-
+/* Bento Box Desktop Settings */
 @media (min-width: 1024px) {
-  /* No desktop, cards de alto impacto ocupam duas colunas */
   .news-card.bento-high {
     grid-column: span 2;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 24px;
+  }
+  
+  .news-card.bento-high .card-image-wrapper {
+    width: 45%;
+    height: 100%;
+    min-height: 200px;
+    flex-shrink: 0;
+  }
+  
+  .news-card.bento-high .card-body-content {
+    justify-content: center;
   }
   
   .news-card.bento-high .card-title {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
   }
-
+  
   .news-card.bento-high .card-summary {
     -webkit-line-clamp: 4;
   }
 }
 
 /* ==========================================================================
-   ESTADOS DE LOAD E EMPTY
-   ========================================================================== */
-
-/* Loader */
-.loader-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 0;
-  gap: 16px;
-  color: var(--text-secondary);
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(2, 132, 199, 0.1);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Empty State */
-.empty-state-container {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-radius: var(--border-radius-lg);
-  padding: 48px 24px;
-  text-align: center;
-  max-width: 500px;
-  margin: 40px auto;
-  box-shadow: 0 4px 25px var(--glass-shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.empty-icon {
-  font-size: 48px;
-  color: var(--text-muted);
-}
-
-.empty-state-container h3 {
-  font-family: var(--font-title);
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-.empty-state-container p {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.run-instruction-box {
-  background: rgba(15, 23, 42, 0.05);
-  border-radius: var(--border-radius-sm);
-  padding: 10px 16px;
-  font-family: monospace;
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-/* ==========================================================================
-   MODAL DE DETALHES (iOS Card Slide Up)
+   MODAL DE DETALHES (Newspaper + Liquid Glass)
    ========================================================================== */
 
 .modal-overlay {
@@ -594,12 +521,12 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(15, 23, 42, 0.25);
+  background-color: rgba(15, 32, 55, 0.22);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   z-index: 1000;
   display: flex;
-  align-items: flex-end; /* Mobile: sobe como gaveta */
+  align-items: flex-end;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
@@ -613,113 +540,149 @@ body {
 
 .modal-card {
   width: 100%;
-  max-height: 90vh;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  max-height: 92vh;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(35px) saturate(150%);
+  -webkit-backdrop-filter: blur(35px) saturate(150%);
   border: 1px solid var(--glass-border);
   border-top-left-radius: var(--border-radius-xl);
   border-top-right-radius: var(--border-radius-xl);
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -15px 45px rgba(15, 32, 55, 0.08);
   position: relative;
   display: flex;
   flex-direction: column;
   transform: translateY(100%);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal-overlay.active .modal-card {
   transform: translateY(0);
 }
 
-/* Ajuste do modal para desktop */
 @media (min-width: 768px) {
   .modal-overlay {
-    align-items: center; /* Centraliza na tela */
+    align-items: center;
   }
-  
   .modal-card {
     width: 90%;
-    max-width: 800px;
+    max-width: 860px;
     height: auto;
-    max-height: 85vh;
+    max-height: 88vh;
     border-radius: var(--border-radius-lg);
   }
 }
 
-/* Botão Fechar Modal */
+/* Fechar */
 .modal-close-btn {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 36px;
-  height: 36px;
+  top: 18px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: rgba(15, 23, 42, 0.06);
+  background: rgba(15, 23, 42, 0.05);
   border: none;
   color: var(--text-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 100;
   transition: var(--transition-smooth);
 }
 
 .modal-close-btn:hover {
-  background: rgba(15, 23, 42, 0.12);
+  background: rgba(15, 23, 42, 0.1);
   transform: scale(1.05);
 }
 
-/* Área de Rolagem do Modal */
+/* Rolagem */
 .modal-scroll-content {
   overflow-y: auto;
-  padding: 32px 24px;
+  padding: 0; /* Controlado internamente */
+}
+
+/* Imagem Hero no Modal */
+.modal-hero-image-wrapper {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  position: relative;
+  border-bottom: var(--divider-thin);
 }
 
 @media (min-width: 768px) {
-  .modal-scroll-content {
-    padding: 40px;
+  .modal-hero-image-wrapper {
+    height: 300px;
   }
 }
 
+.modal-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-hero-image-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to top, rgba(255,255,255,0.95), transparent);
+}
+
+/* Header */
 .modal-header {
-  margin-bottom: 24px;
+  padding: 28px 28px 16px 28px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .modal-header {
+    padding: 36px 36px 20px 36px;
+  }
 }
 
 .modal-category {
-  font-size: 0.8rem;
+  font-family: var(--font-subtitle);
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--primary);
   background: var(--primary-light);
-  padding: 6px 12px;
+  padding: 5px 12px;
   border-radius: 9999px;
   letter-spacing: 0.05em;
+  border: 1px solid rgba(3, 83, 164, 0.1);
 }
 
 .modal-title {
   font-family: var(--font-title);
-  font-size: 1.8rem;
-  font-weight: 800;
-  line-height: 1.25;
-  color: var(--text-primary);
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: #002855;
 }
 
 .modal-meta {
+  width: 100%;
   display: flex;
   align-items: center;
+  border-bottom: var(--divider-thin);
+  padding-bottom: 16px;
 }
 
 .modal-impact-badge {
-  font-size: 0.8rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
   font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 5px 10px;
+  border-radius: 6px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -732,60 +695,144 @@ body {
   border-radius: 50%;
 }
 
-/* Badges de impacto no modal */
-.modal-overlay #modalImpact {
-  /* Resolvido via JS */
-}
-
-/* Corpo das Seções do Modal */
+/* Corpo */
 .modal-body {
+  padding: 0 28px 40px 28px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
+}
+
+@media (min-width: 768px) {
+  .modal-body {
+    padding: 0 36px 48px 36px;
+  }
 }
 
 .modal-section {
-  background: rgba(255, 255, 255, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.65);
   border-radius: var(--border-radius-md);
-  padding: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
 }
 
 .section-title {
   font-family: var(--font-title);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 12px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
+  border-bottom: var(--divider-thin);
+  padding-bottom: 8px;
 }
 
 .section-icon {
   color: var(--primary);
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .summary-section {
   border-left: 4px solid var(--primary);
-  background: rgba(2, 132, 199, 0.02);
+  background: rgba(3, 83, 164, 0.02);
 }
 
 #modalSummary {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  font-weight: 500;
+  font-family: var(--font-subtitle);
+  font-size: 1.1rem;
+  line-height: 1.55;
+  font-weight: 600;
   color: var(--text-primary);
+  font-style: italic;
 }
 
 #modalAnalysis {
+  font-family: var(--font-body);
   font-size: 0.95rem;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--text-secondary);
 }
 
-/* Grid de Ação e Lucro */
+/* ==========================================================================
+   PAINEL DE INTELIGÊNCIA COMERCIAL (Gráficos e Mapas SVG)
+   ========================================================================== */
+
+.intelligence-dashboard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .intelligence-dashboard {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.intel-card {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: var(--border-radius-md);
+  padding: 18px;
+}
+
+.intel-card-title {
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+  padding-bottom: 6px;
+}
+
+.chart-canvas-wrapper, .map-canvas-wrapper {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: var(--border-radius-sm);
+  padding: 8px;
+  border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+/* SVG Chart/Map Styles */
+.chart-bar {
+  transition: fill 0.3s ease;
+}
+.chart-bar:hover {
+  fill: var(--accent) !important;
+}
+
+.map-street {
+  stroke: rgba(15, 23, 42, 0.1);
+  stroke-width: 3;
+  fill: none;
+}
+.map-river {
+  stroke: #bae6fd;
+  stroke-width: 8;
+  fill: none;
+}
+.map-hotspot {
+  animation: pulse 2s infinite alternate;
+}
+@keyframes pulse {
+  0% { r: 6px; opacity: 0.4; }
+  100% { r: 12px; opacity: 0.9; }
+}
+
+/* ==========================================================================
+   GRADE DE RECOMENDAÇÕES E LUCRO
+   ========================================================================== */
+
 .modal-action-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -800,51 +847,50 @@ body {
 
 .action-card {
   border-radius: var(--border-radius-md);
-  padding: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.03);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
 }
 
 .how-to-act-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 246, 250, 0.8));
-  border-left: 4px solid var(--accent);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(224, 242, 254, 0.3));
+  border-left: 5px solid var(--accent);
 }
 
 .how-to-profit-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 253, 244, 0.8));
-  border-left: 4px solid var(--impact-low);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(240, 253, 244, 0.3));
+  border-left: 5px solid var(--impact-low);
 }
 
 .action-card-title {
   font-family: var(--font-title);
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 800;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.how-to-act-card .action-card-title { color: var(--text-primary); }
+.how-to-act-card .action-card-title { color: #1e3a8a; }
 .how-to-act-card .card-icon { color: var(--accent); }
 
-.how-to-profit-card .action-card-title { color: #065f46; } /* Verde escuro */
+.how-to-profit-card .action-card-title { color: #064e3b; }
 .how-to-profit-card .card-icon { color: var(--impact-low); }
 
 .action-card-content {
+  font-family: var(--font-body);
   font-size: 0.9rem;
   line-height: 1.6;
   color: var(--text-secondary);
 }
 
-/* Estilo para listas dentro do modal */
 .action-card-content ul, 
 .action-card-content ol {
   padding-left: 18px;
 }
 
 .action-card-content li {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 /* ==========================================================================
@@ -857,12 +903,13 @@ body {
   text-align: center;
   color: var(--text-muted);
   font-size: 0.8rem;
+  border-top: var(--divider-thin);
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;

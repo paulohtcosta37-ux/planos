@@ -303,7 +303,7 @@ function openModal(newsItem) {
   if (newsItem.impactLevel === 'Alto' || newsItem.impactLevel === 'Médio') {
     intelSection.style.display = 'block';
     renderSVGChart(chartContainer, newsItem);
-    renderSVGMap(mapContainer, newsItem);
+    renderGoogleMap(mapContainer, newsItem);
   } else {
     intelSection.style.display = 'none';
   }
@@ -457,72 +457,36 @@ function renderSVGChart(container, newsItem) {
 }
 
 /**
- * Desenha um mapa vetorial SVG simplificado do centro de Itaúna e destaca o Hotspot
+ * Renderiza um iframe do Google Maps interativo focado no local aproximado da notícia
  * @param {HTMLElement} container 
  * @param {Object} newsItem 
  */
-function renderSVGMap(container, newsItem) {
-  let hx = 150;
-  let hy = 80;
-  let locationLabel = "Centro";
-
+function renderGoogleMap(container, newsItem) {
+  let locationQuery = "Itaúna, MG";
   const titleLower = newsItem.title.toLowerCase();
   
-  // Mapeamento geográfico sutil baseado em palavras chave das matérias
   if (titleLower.includes('praça') || titleLower.includes('matriz') || titleLower.includes('arraial') || titleLower.includes('festival')) {
-    hx = 95;
-    hy = 45;
-    locationLabel = "Praça da Matriz";
+    locationQuery = "Praça Dr. Augusto Gonçalves, Itaúna - MG";
   } else if (titleLower.includes('jove soares') || titleLower.includes('araújo') || titleLower.includes('prainha') || titleLower.includes('avenida')) {
-    hx = 200;
-    hy = 110;
-    locationLabel = "Av. Jove Soares";
+    locationQuery = "Avenida Jove Soares, Itaúna - MG";
   } else if (titleLower.includes('santanense')) {
-    hx = 50;
-    hy = 140;
-    locationLabel = "Santanense";
+    locationQuery = "Santanense, Itaúna - MG";
+  } else if (newsItem.location) {
+    locationQuery = `${newsItem.location}, Itaúna - MG`;
   }
 
+  const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(locationQuery)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+  
   container.innerHTML = `
-    <svg viewBox="0 0 340 180" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-      <rect width="340" height="180" fill="none"/>
-      
-      <!-- Córrego do Soldado (Canal da Prainha na Av. Jove Soares) -->
-      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="#38bdf8" stroke-width="6" opacity="0.8"/>
-      
-      <!-- Av. Jove Soares (Prainha) -->
-      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="rgba(255, 255, 255, 0.12)" stroke-width="14"/>
-      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.8"/>
-      
-      <!-- Rua Silva Jardim (Cruzamento Principal) -->
-      <path d="M 95,15 Q 150,75 220,175" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="8"/>
-      
-      <!-- Rua Antônio de Corradi -->
-      <line x1="20" y1="75" x2="320" y2="75" stroke="rgba(255, 255, 255, 0.08)" stroke-width="6"/>
-      
-      <!-- Rua Manoel Gonçalves -->
-      <line x1="150" y1="15" x2="150" y2="175" stroke="rgba(255, 255, 255, 0.05)" stroke-width="5"/>
-
-      <!-- Praça da Matriz (Praça Dr. Augusto Gonçalves) -->
-      <rect x="70" y="25" width="50" height="35" rx="6" fill="rgba(45, 212, 191, 0.08)" stroke="rgba(45, 212, 191, 0.3)" stroke-width="1.5"/>
-      <text x="95" y="45" font-size="7" font-weight="800" fill="#2dd4bf" text-anchor="middle" font-family="'Inter', sans-serif">Praça da Matriz</text>
-      
-      <!-- Legendas de Ruas -->
-      <text x="260" y="55" font-size="6.5" font-weight="700" fill="#38bdf8" transform="rotate(-30 260 55)" font-family="'Inter', sans-serif">Av. Jove Soares</text>
-      <text x="110" y="95" font-size="6" font-weight="700" fill="#94a3b8" transform="rotate(55 110 95)" font-family="'Inter', sans-serif">Rua Silva Jardim</text>
-      <text x="280" y="83" font-size="6.5" font-weight="700" fill="#94a3b8" font-family="'Inter', sans-serif">Rua A. Corradi</text>
-
-      <!-- Hotspot Pulsante Red -->
-      <circle cx="${hx}" cy="${hy}" r="16" fill="#ef4444" opacity="0.15" class="map-hotspot"/>
-      <circle cx="${hx}" cy="${hy}" r="8" fill="#ef4444" opacity="0.4" class="map-hotspot"/>
-      <circle cx="${hx}" cy="${hy}" r="3" fill="#ef4444"/>
-      
-      <!-- Painel do Hotspot -->
-      <g transform="translate(${hx + 10}, ${hy - 10})">
-        <rect x="0" y="0" width="70" height="15" rx="3" fill="#ffffff" opacity="0.95"/>
-        <text x="35" y="10" font-size="6.5" font-weight="800" fill="#0f172a" text-anchor="middle" font-family="'Inter', sans-serif">${locationLabel}</text>
-      </g>
-    </svg>
+    <iframe 
+      width="100%" 
+      height="100%" 
+      style="border:0; border-radius:12px; filter: grayscale(0.2) contrast(1.15) brightness(0.95);" 
+      loading="lazy" 
+      allowfullscreen 
+      referrerpolicy="no-referrer-when-downgrade" 
+      src="${embedUrl}">
+    </iframe>
   `;
 }
 

@@ -868,7 +868,7 @@ body {
   padding-bottom: 8px;
 }
 
-.chart-canvas-wrapper, .map-canvas-wrapper {
+.chart-canvas-wrapper {
   height: 200px;
   display: flex;
   align-items: center;
@@ -879,30 +879,21 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* SVG Chart/Map Neon Styles */
+.map-canvas-wrapper {
+  height: 200px;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 !important; /* Sem padding para o iframe do Google Maps preencher tudo */
+  overflow: hidden;
+}
+
+/* SVG Chart Neon Styles */
 .chart-bar {
   transition: fill 0.3s ease;
 }
 .chart-bar:hover {
   fill: #60a5fa !important; /* Azul Neon */
-}
-
-.map-street {
-  stroke: rgba(255, 255, 255, 0.12);
-  stroke-width: 3;
-  fill: none;
-}
-.map-river {
-  stroke: #38bdf8; /* Azul claro Neon */
-  stroke-width: 8;
-  fill: none;
-}
-.map-hotspot {
-  animation: pulse 2s infinite alternate;
-}
-@keyframes pulse {
-  0% { r: 6px; opacity: 0.4; }
-  100% { r: 12px; opacity: 0.9; }
 }
 
 /* ==========================================================================

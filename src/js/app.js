@@ -295,15 +295,13 @@ function openModal(newsItem) {
   const analysisText = newsItem.investigativeAnalysis || "Nenhuma análise aprofundada fornecida.";
   document.getElementById('modalAnalysis').innerHTML = analysisText.split('\n').map(p => `<p style="margin-bottom:12px;">${p}</p>`).join('');
   
-  // Renderizar gráficos e mapas se for de impacto Alto ou Médio (Dashboard de Inteligência)
+  // Renderizar gráficos se for de impacto Alto ou Médio (Dashboard de Inteligência)
   const intelSection = document.getElementById('modalIntelligenceSection');
   const chartContainer = document.getElementById('modalChartContainer');
-  const mapContainer = document.getElementById('modalMapContainer');
   
   if (newsItem.impactLevel === 'Alto' || newsItem.impactLevel === 'Médio') {
     intelSection.style.display = 'block';
     renderSVGChart(chartContainer, newsItem);
-    renderGoogleMap(mapContainer, newsItem);
   } else {
     intelSection.style.display = 'none';
   }

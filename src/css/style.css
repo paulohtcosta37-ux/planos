@@ -427,7 +427,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 380px; /* Tamanho único vertical */
+  min-height: 410px; /* Tamanho mínimo uniforme e confortável */
+  height: 100%;
   gap: 16px;
   transition: var(--transition-spring);
   position: relative;
@@ -574,7 +575,7 @@ body {
   line-height: 1.55;
   color: var(--text-secondary);
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3; /* Reduzido para 3 linhas para liberar espaço e não cortar o rodapé */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -829,15 +830,9 @@ body {
    ========================================================================== */
 
 .intelligence-dashboard {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
-}
-
-@media (min-width: 768px) {
-  .intelligence-dashboard {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .intel-card {

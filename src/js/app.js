@@ -167,16 +167,6 @@ function renderNewsGrid(newsList) {
     const bentoClass = newsItem.impactLevel === 'Alto' ? 'bento-high' : '';
     card.className = `news-card ${impactClass} ${bentoClass}`;
     
-    // Estrutura do card com imagem (opcional)
-    let cardImageHTML = '';
-    if (newsItem.image) {
-      cardImageHTML = `
-        <div class="card-image-wrapper">
-          <img src="${newsItem.image}" alt="${newsItem.title}" class="card-image" loading="lazy">
-        </div>
-      `;
-    }
-    
     card.innerHTML = `
       <div class="card-header-tags">
         <span class="category-tag">${newsItem.category}</span>
@@ -184,8 +174,6 @@ function renderNewsGrid(newsList) {
           ${newsItem.impactLevel} Impacto
         </span>
       </div>
-      
-      ${cardImageHTML}
       
       <div class="card-body-content">
         <h3 class="card-title">${newsItem.title}</h3>
@@ -219,16 +207,7 @@ function openModal(newsItem) {
   document.getElementById('modalTitle').innerText = newsItem.title;
   document.getElementById('modalSummary').innerText = newsItem.executiveSummary;
   
-  // Imagem Hero do Modal
-  const heroWrapper = document.getElementById('modalHeroImageWrapper');
-  const heroImg = document.getElementById('modalHeroImage');
-  if (newsItem.image) {
-    heroImg.src = newsItem.image;
-    heroImg.alt = newsItem.title;
-    heroWrapper.style.display = 'block';
-  } else {
-    heroWrapper.style.display = 'none';
-  }
+  // Imagens removidas a pedido do usuário
   
   // Formatar análise investigativa (processa quebras de linha para parágrafos)
   const analysisText = newsItem.investigativeAnalysis || "Nenhuma análise aprofundada fornecida.";

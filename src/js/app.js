@@ -153,7 +153,82 @@ function showEmptyState(isoString) {
 }
 
 /**
- * Renderiza o Grid de Notícias no formato Bento Box
+ * Retorna o ícone geométrico minimalista de traço grosso baseado na categoria da notícia
+ * @param {string} category 
+ * @returns {string} Código SVG
+ */
+function getGeoIconSvg(category) {
+  const cat = category.toLowerCase();
+  if (cat.includes('evento')) {
+    // Ícone "+" cruz geométrica
+    return `
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    `;
+  } else if (cat.includes('concorrência') || cat.includes('concorrencia')) {
+    // Ícone "o" octógono
+    return `
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+      </svg>
+    `;
+  } else if (cat.includes('infraestrutura')) {
+    // Ícone "x" cruz diagonal
+    return `
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    `;
+  } else {
+    // Ícone losango
+    return `
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="12 2 22 12 12 22 2 12 12 2"></polygon>
+      </svg>
+    `;
+  }
+}
+
+/**
+ * Retorna o SVG do gradiente abstrato de vidro refrativo interno
+ * @param {string} impactLevel 
+ * @returns {string} Código HTML/SVG
+ */
+function getCardBgGradientSvg(impactLevel) {
+  let primaryColor = '#60a5fa'; // Azul Neon
+  let secondaryColor = '#0353a4'; // Azul Profundo
+  
+  if (impactLevel === 'Alto') {
+    primaryColor = '#f43f5e'; // Vermelho brilhante
+    secondaryColor = '#2563eb'; // Azul brilhante
+  } else if (impactLevel === 'Médio') {
+    primaryColor = '#f97316'; // Laranja brilhante
+    secondaryColor = '#0d9488'; // Teal brilhante
+  } else {
+    primaryColor = '#0d9488'; // Teal
+    secondaryColor = '#60a5fa';
+  }
+  
+  return `
+    <div class="card-bg-gradient">
+      <svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glassBlurCard">
+            <feGaussianBlur stdDeviation="28" />
+          </filter>
+        </defs>
+        <circle cx="55" cy="55" r="45" fill="${primaryColor}" filter="url(#glassBlurCard)" />
+        <circle cx="145" cy="145" r="55" fill="${secondaryColor}" filter="url(#glassBlurCard)" />
+      </svg>
+    </div>
+  `;
+}
+
+/**
+ * Renderiza o Grid de Notícias no formato Glassmorphism Uniforme
  * @param {Array} newsList 
  */
 function renderNewsGrid(newsList) {
@@ -164,10 +239,12 @@ function renderNewsGrid(newsList) {
     
     // Classes de estilização base
     const impactClass = `impact-${newsItem.impactLevel.toLowerCase()}`;
-    const bentoClass = newsItem.impactLevel === 'Alto' ? 'bento-high' : '';
-    card.className = `news-card ${impactClass} ${bentoClass}`;
+    card.className = `news-card ${impactClass}`;
     
     card.innerHTML = `
+      <!-- Fundo de Vidro Refrativo (Gradiente Abstrato) -->
+      ${getCardBgGradientSvg(newsItem.impactLevel)}
+
       <div class="card-header-tags">
         <span class="category-tag">${newsItem.category}</span>
         <span class="impact-badge" aria-label="Nível de impacto comercial: ${newsItem.impactLevel}">
@@ -175,6 +252,11 @@ function renderNewsGrid(newsList) {
         </span>
       </div>
       
+      <!-- Ícone Geométrico Minimalista -->
+      <div class="card-geo-icon" aria-hidden="true">
+        ${getGeoIconSvg(newsItem.category)}
+      </div>
+
       <div class="card-body-content">
         <h3 class="card-title">${newsItem.title}</h3>
         <p class="card-summary">${newsItem.executiveSummary}</p>
@@ -343,31 +425,31 @@ function renderSVGChart(container, newsItem) {
     const isNegative = d.value < 0;
     
     const y = isNegative ? zeroY : zeroY - barHeight;
-    const color = isNegative ? '#b91c1c' : '#0353a4';
+    const color = isNegative ? '#f43f5e' : '#60a5fa'; // Vermelho Neon vs Azul Neon
     
     barsHTML += `
       <!-- Barra ${d.name} -->
-      <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="4" fill="${color}" opacity="0.85" class="chart-bar">
+      <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="5" fill="${color}" opacity="0.9" class="chart-bar">
         <title>${d.name}: ${d.label}</title>
       </rect>
       <!-- Texto do Eixo X -->
-      <text x="${x + barWidth/2}" y="${zeroY + 18}" font-size="7.5" font-family="'Inter', sans-serif" font-weight="600" fill="#475569" text-anchor="middle">${d.name}</text>
+      <text x="${x + barWidth/2}" y="${zeroY + 18}" font-size="7.5" font-family="'Inter', sans-serif" font-weight="700" fill="#94a3b8" text-anchor="middle">${d.name}</text>
       <!-- Texto do Valor da Barra -->
-      <text x="${x + barWidth/2}" y="${isNegative ? y + barHeight + 12 : y - 6}" font-size="8.5" font-family="'Inter', sans-serif" font-weight="700" fill="${color}" text-anchor="middle">${d.label}</text>
+      <text x="${x + barWidth/2}" y="${isNegative ? y + barHeight + 12 : y - 6}" font-size="8.5" font-family="'Inter', sans-serif" font-weight="800" fill="${color}" text-anchor="middle">${d.label}</text>
     `;
   });
 
   container.innerHTML = `
     <svg viewBox="0 0 ${svgWidth} ${svgHeight}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
       <!-- Linhas do Grid -->
-      <line x1="30" y1="40" x2="330" y2="40" stroke="rgba(15, 23, 42, 0.04)" stroke-width="1"/>
-      <line x1="30" y1="85" x2="330" y2="85" stroke="rgba(15, 23, 42, 0.04)" stroke-width="1"/>
-      <line x1="30" y1="130" x2="330" y2="130" stroke="rgba(15, 23, 42, 0.12)" stroke-width="1.5"/>
+      <line x1="30" y1="40" x2="330" y2="40" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      <line x1="30" y1="85" x2="330" y2="85" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      <line x1="30" y1="130" x2="330" y2="130" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5"/>
       
       <!-- Indicadores de Eixo Y -->
-      <text x="25" y="43" font-size="7" font-family="'Inter', sans-serif" font-weight="600" fill="#94a3b8" text-anchor="end">+50%</text>
-      <text x="25" y="88" font-size="7" font-family="'Inter', sans-serif" font-weight="600" fill="#94a3b8" text-anchor="end">+25%</text>
-      <text x="25" y="133" font-size="7" font-family="'Inter', sans-serif" font-weight="600" fill="#475569" text-anchor="end">0%</text>
+      <text x="25" y="43" font-size="7" font-family="'Inter', sans-serif" font-weight="700" fill="#94a3b8" text-anchor="end">+50%</text>
+      <text x="25" y="88" font-size="7" font-family="'Inter', sans-serif" font-weight="700" fill="#94a3b8" text-anchor="end">+25%</text>
+      <text x="25" y="133" font-size="7" font-family="'Inter', sans-serif" font-weight="700" fill="#cbd5e1" text-anchor="end">0%</text>
       
       ${barsHTML}
     </svg>
@@ -406,29 +488,29 @@ function renderSVGMap(container, newsItem) {
       <rect width="340" height="180" fill="none"/>
       
       <!-- Córrego do Soldado (Canal da Prainha na Av. Jove Soares) -->
-      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="#bae6fd" stroke-width="6" opacity="0.7"/>
+      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="#38bdf8" stroke-width="6" opacity="0.8"/>
       
       <!-- Av. Jove Soares (Prainha) -->
-      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="rgba(3, 83, 164, 0.12)" stroke-width="14"/>
-      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="rgba(255, 255, 255, 0.12)" stroke-width="14"/>
+      <path d="M 20,175 Q 160,150 200,85 T 320,10" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.8"/>
       
       <!-- Rua Silva Jardim (Cruzamento Principal) -->
-      <path d="M 95,15 Q 150,75 220,175" fill="none" stroke="rgba(15, 23, 42, 0.08)" stroke-width="8"/>
+      <path d="M 95,15 Q 150,75 220,175" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="8"/>
       
       <!-- Rua Antônio de Corradi -->
-      <line x1="20" y1="75" x2="320" y2="75" stroke="rgba(15, 23, 42, 0.08)" stroke-width="6"/>
+      <line x1="20" y1="75" x2="320" y2="75" stroke="rgba(255, 255, 255, 0.08)" stroke-width="6"/>
       
       <!-- Rua Manoel Gonçalves -->
-      <line x1="150" y1="15" x2="150" y2="175" stroke="rgba(15, 23, 42, 0.06)" stroke-width="5"/>
+      <line x1="150" y1="15" x2="150" y2="175" stroke="rgba(255, 255, 255, 0.05)" stroke-width="5"/>
 
       <!-- Praça da Matriz (Praça Dr. Augusto Gonçalves) -->
-      <rect x="70" y="25" width="50" height="35" rx="6" fill="rgba(15, 118, 110, 0.08)" stroke="rgba(15, 118, 110, 0.25)" stroke-width="1.5"/>
-      <text x="95" y="45" font-size="7" font-weight="800" fill="#0f766e" text-anchor="middle" font-family="'Inter', sans-serif">Praça da Matriz</text>
+      <rect x="70" y="25" width="50" height="35" rx="6" fill="rgba(45, 212, 191, 0.08)" stroke="rgba(45, 212, 191, 0.3)" stroke-width="1.5"/>
+      <text x="95" y="45" font-size="7" font-weight="800" fill="#2dd4bf" text-anchor="middle" font-family="'Inter', sans-serif">Praça da Matriz</text>
       
       <!-- Legendas de Ruas -->
-      <text x="260" y="55" font-size="6.5" font-weight="600" fill="#0353a4" transform="rotate(-30 260 55)" font-family="'Inter', sans-serif">Av. Jove Soares (Prainha)</text>
-      <text x="110" y="95" font-size="6" font-weight="600" fill="#64748b" transform="rotate(55 110 95)" font-family="'Inter', sans-serif">Rua Silva Jardim</text>
-      <text x="280" y="83" font-size="6.5" font-weight="600" fill="#64748b" font-family="'Inter', sans-serif">Rua A. Corradi</text>
+      <text x="260" y="55" font-size="6.5" font-weight="700" fill="#38bdf8" transform="rotate(-30 260 55)" font-family="'Inter', sans-serif">Av. Jove Soares</text>
+      <text x="110" y="95" font-size="6" font-weight="700" fill="#94a3b8" transform="rotate(55 110 95)" font-family="'Inter', sans-serif">Rua Silva Jardim</text>
+      <text x="280" y="83" font-size="6.5" font-weight="700" fill="#94a3b8" font-family="'Inter', sans-serif">Rua A. Corradi</text>
 
       <!-- Hotspot Pulsante Red -->
       <circle cx="${hx}" cy="${hy}" r="16" fill="#ef4444" opacity="0.15" class="map-hotspot"/>
@@ -437,8 +519,8 @@ function renderSVGMap(container, newsItem) {
       
       <!-- Painel do Hotspot -->
       <g transform="translate(${hx + 10}, ${hy - 10})">
-        <rect x="0" y="0" width="70" height="15" rx="3" fill="#1e293b" opacity="0.9"/>
-        <text x="35" y="10" font-size="6" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="'Inter', sans-serif">${locationLabel}</text>
+        <rect x="0" y="0" width="70" height="15" rx="3" fill="#ffffff" opacity="0.95"/>
+        <text x="35" y="10" font-size="6.5" font-weight="800" fill="#0f172a" text-anchor="middle" font-family="'Inter', sans-serif">${locationLabel}</text>
       </g>
     </svg>
   `;

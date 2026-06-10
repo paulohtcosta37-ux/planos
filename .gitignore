@@ -1,0 +1,5 @@
+agent/.env
+# Ignorar arquivos de log e temporários do sistema
+*.log
+.DS_Store
+Thumbs.db

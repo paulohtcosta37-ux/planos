@@ -1,0 +1,871 @@
+/* ==========================================================================
+   DESIGN SYSTEM - ITAÚNA NEGÓCIOS
+   Aparência: Light Glassmorphism (Estilo Apple, Tons Azuis)
+   ========================================================================== */
+
+:root {
+  /* Cores Temáticas */
+  --bg-primary: #f0f6fa;
+  --bg-gradient-start: #e0f2fe; /* Azul Celeste Claro */
+  --bg-gradient-middle: #f1f5f9; /* Cinza-azulado Neutro */
+  --bg-gradient-end: #dbeafe; /* Azul Suave */
+  
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-hover: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --glass-shadow: rgba(15, 23, 42, 0.06);
+  --glass-shadow-hover: rgba(15, 23, 42, 0.12);
+  
+  --primary: #0284c7; /* Azul Principal Apple */
+  --primary-hover: #0369a1;
+  --primary-light: rgba(2, 132, 199, 0.1);
+  --accent: #2563eb;
+  
+  /* Cores de Texto */
+  --text-primary: #0f172a; /* Slate 900 (Alto Contraste) */
+  --text-secondary: #475569; /* Slate 600 */
+  --text-muted: #64748b; /* Slate 500 */
+  
+  /* Níveis de Impacto */
+  --impact-high: #e11d48; /* Vermelho/Rosa para Alto Impacto */
+  --impact-high-bg: rgba(225, 29, 72, 0.08);
+  --impact-medium: #d97706; /* Laranja para Médio Impacto */
+  --impact-medium-bg: rgba(217, 119, 6, 0.08);
+  --impact-low: #059669; /* Verde para Baixo Impacto */
+  --impact-low-bg: rgba(5, 150, 105, 0.08);
+
+  /* Fontes e Tamanhos */
+  --font-title: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Layout */
+  --border-radius-sm: 10px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 24px;
+  --border-radius-xl: 32px;
+  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ==========================================================================
+   RESET & CONFIGURAÇÕES GERAIS
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ocultar elementos acessíveis apenas para leitores de tela */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   FUNDO FLUIDO ANIMADO (Apple Aesthetics)
+   ========================================================================== */
+
+.fluid-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, 
+    var(--bg-gradient-start), 
+    var(--bg-gradient-middle), 
+    var(--bg-gradient-end)
+  );
+  background-size: 400% 400%;
+  animation: fluidGradient 20s ease infinite;
+}
+
+@keyframes fluidGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ==========================================================================
+   CONTAINER E LAYOUT
+   ========================================================================== */
+
+.app-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 16px 64px 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cabeçalho Apple Translucent */
+.app-header {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 30px var(--glass-shadow);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brand-tag {
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+}
+
+.brand-title {
+  font-family: var(--font-title);
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--text-primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   DATE CAROUSEL (Linha do tempo horizontal)
+   ========================================================================== */
+
+.date-timeline-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 16px;
+}
+
+.date-timeline {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  flex-grow: 1;
+  padding: 4px 0;
+  /* Ocultar barra de rolagem no Firefox e IE */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Ocultar barra de rolagem no Chrome/Safari */
+.date-timeline::-webkit-scrollbar {
+  display: none;
+}
+
+.date-item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-smooth);
+}
+
+.date-item:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.date-item-weekday {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.date-item-day {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.date-item-month {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* Estado Ativo (Pílula Apple) */
+.date-item.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.25);
+}
+
+.date-item.active .date-item-weekday {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.date-item.active .date-item-day {
+  color: #ffffff;
+}
+
+.date-item.active .date-item-month {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Botão de Calendário */
+.date-picker-wrapper {
+  position: relative;
+}
+
+.calendar-btn {
+  width: 50px;
+  height: 72px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.calendar-btn:hover {
+  background: var(--glass-bg-hover);
+  color: var(--primary-hover);
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-btn .material-symbols-rounded {
+  font-size: 24px;
+}
+
+.hidden-date-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   CONTEÚDO PRINCIPAL & BENTO GRID
+   ========================================================================== */
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Grid Bento Box */
+.news-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 8px 0;
+}
+
+@media (min-width: 768px) {
+  .news-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .news-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Estilo do Card individual (Glassmorphism) */
+.news-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px) saturate(160%);
+  -webkit-backdrop-filter: blur(15px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  box-shadow: 0 4px 20px var(--glass-shadow);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  transition: var(--transition-spring);
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.news-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: transparent;
+  transition: var(--transition-smooth);
+}
+
+.news-card:hover {
+  background: var(--glass-bg-hover);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 30px var(--glass-shadow-hover);
+}
+
+/* Tags de Categorias e Impacto */
+.card-header-tags {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+.impact-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.impact-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Variações de Impacto nos Cards */
+.news-card.impact-high::before {
+  background: var(--impact-high);
+}
+.news-card.impact-high .impact-badge {
+  color: var(--impact-high);
+  background: var(--impact-high-bg);
+}
+.news-card.impact-high .impact-badge::before {
+  background: var(--impact-high);
+}
+
+.news-card.impact-medium::before {
+  background: var(--impact-medium);
+}
+.news-card.impact-medium .impact-badge {
+  color: var(--impact-medium);
+  background: var(--impact-medium-bg);
+}
+.news-card.impact-medium .impact-badge::before {
+  background: var(--impact-medium);
+}
+
+.news-card.impact-low::before {
+  background: var(--impact-low);
+}
+.news-card.impact-low .impact-badge {
+  color: var(--impact-low);
+  background: var(--impact-low-bg);
+}
+.news-card.impact-low .impact-badge::before {
+  background: var(--impact-low);
+}
+
+/* Título e Resumo do Card */
+.card-body-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.card-title {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-primary);
+  transition: var(--transition-smooth);
+}
+
+.news-card:hover .card-title {
+  color: var(--accent);
+}
+
+.card-summary {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Rodapé do Card */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  padding-top: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.read-more-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition-smooth);
+}
+
+.news-card:hover .read-more-text {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   REGRAS BENTO BOX (Tamanhos Alternados)
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+  /* No desktop, cards de alto impacto ocupam duas colunas */
+  .news-card.bento-high {
+    grid-column: span 2;
+  }
+  
+  .news-card.bento-high .card-title {
+    font-size: 1.6rem;
+  }
+
+  .news-card.bento-high .card-summary {
+    -webkit-line-clamp: 4;
+  }
+}
+
+/* ==========================================================================
+   ESTADOS DE LOAD E EMPTY
+   ========================================================================== */
+
+/* Loader */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(2, 132, 199, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.empty-state-container {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: var(--border-radius-lg);
+  padding: 48px 24px;
+  text-align: center;
+  max-width: 500px;
+  margin: 40px auto;
+  box-shadow: 0 4px 25px var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  color: var(--text-muted);
+}
+
+.empty-state-container h3 {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.empty-state-container p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.run-instruction-box {
+  background: rgba(15, 23, 42, 0.05);
+  border-radius: var(--border-radius-sm);
+  padding: 10px 16px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   MODAL DE DETALHES (iOS Card Slide Up)
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.25);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end; /* Mobile: sobe como gaveta */
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  width: 100%;
+  max-height: 90vh;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-top-left-radius: var(--border-radius-xl);
+  border-top-right-radius: var(--border-radius-xl);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.08);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active .modal-card {
+  transform: translateY(0);
+}
+
+/* Ajuste do modal para desktop */
+@media (min-width: 768px) {
+  .modal-overlay {
+    align-items: center; /* Centraliza na tela */
+  }
+  
+  .modal-card {
+    width: 90%;
+    max-width: 800px;
+    height: auto;
+    max-height: 85vh;
+    border-radius: var(--border-radius-lg);
+  }
+}
+
+/* Botão Fechar Modal */
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.06);
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: var(--transition-smooth);
+}
+
+.modal-close-btn:hover {
+  background: rgba(15, 23, 42, 0.12);
+  transform: scale(1.05);
+}
+
+/* Área de Rolagem do Modal */
+.modal-scroll-content {
+  overflow-y: auto;
+  padding: 32px 24px;
+}
+
+@media (min-width: 768px) {
+  .modal-scroll-content {
+    padding: 40px;
+  }
+}
+
+.modal-header {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.modal-category {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 6px 12px;
+  border-radius: 9999px;
+  letter-spacing: 0.05em;
+}
+
+.modal-title {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+
+.modal-meta {
+  display: flex;
+  align-items: center;
+}
+
+.modal-impact-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-impact-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Badges de impacto no modal */
+.modal-overlay #modalImpact {
+  /* Resolvido via JS */
+}
+
+/* Corpo das Seções do Modal */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.modal-section {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+}
+
+.section-title {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-icon {
+  color: var(--primary);
+  font-size: 20px;
+}
+
+.summary-section {
+  border-left: 4px solid var(--primary);
+  background: rgba(2, 132, 199, 0.02);
+}
+
+#modalSummary {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+#modalAnalysis {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Grid de Ação e Lucro */
+.modal-action-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .modal-action-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.action-card {
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.how-to-act-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 246, 250, 0.8));
+  border-left: 4px solid var(--accent);
+}
+
+.how-to-profit-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 253, 244, 0.8));
+  border-left: 4px solid var(--impact-low);
+}
+
+.action-card-title {
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.how-to-act-card .action-card-title { color: var(--text-primary); }
+.how-to-act-card .card-icon { color: var(--accent); }
+
+.how-to-profit-card .action-card-title { color: #065f46; } /* Verde escuro */
+.how-to-profit-card .card-icon { color: var(--impact-low); }
+
+.action-card-content {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Estilo para listas dentro do modal */
+.action-card-content ul, 
+.action-card-content ol {
+  padding-left: 18px;
+}
+
+.action-card-content li {
+  margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   RODAPÉ E ANIMAÇÕES
+   ========================================================================== */
+
+.app-footer {
+  margin-top: auto;
+  padding-top: 48px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

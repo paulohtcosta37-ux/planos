@@ -250,7 +250,7 @@ body {
 
 .hero-title {
   font-family: var(--font-title);
-  font-size: 52px;
+  font-size: clamp(2.25rem, 6vw, 3.25rem);
   line-height: 1.15;
   font-weight: 800;
   letter-spacing: -1.5px;
@@ -1094,6 +1094,10 @@ textarea.form-control {
     padding: 30px 20px;
   }
   
+  .itauna-section {
+    padding: 30px 20px;
+  }
+  
   .service-gmb {
     direction: ltr; /* Reset no-order swap */
   }
@@ -1145,5 +1149,30 @@ textarea.form-control {
     flex-direction: column;
     gap: 20px;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 28px;
+  }
+  .glass-sphere {
+    width: 150px;
+    height: 150px;
+  }
+  .chart-bar-container {
+    width: 40px;
+  }
+  .chart-bar {
+    width: 16px;
+  }
+  .db-card-value {
+    font-size: 20px;
+  }
+  .simulator-panel {
+    padding: 20px 15px;
+  }
+  .contact-form {
+    padding: 25px 20px;
   }
 }

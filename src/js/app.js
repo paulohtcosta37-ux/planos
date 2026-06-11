@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function setupDatesList() {
   state.datesList = [];
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < 7; i++) {
     const d = new Date();
     d.setDate(d.getDate() - i);
     state.datesList.push(d);
@@ -125,6 +125,19 @@ async function loadNewsForDate(date) {
   newsGrid.style.display = 'none';
   emptyState.style.display = 'none';
   loaderContainer.style.display = 'flex';
+  
+  const today = new Date();
+  const todayISO = formatISODate(today);
+  const currentHour = today.getHours();
+  
+  // Regra de negócio: se for a data de hoje (ou futura) e ainda for antes das 18:00 locais,
+  // força a exibição do estado vazio avisando o horário de liberação.
+  if (isoString > todayISO || (isoString === todayISO && currentHour < 18)) {
+    loaderContainer.style.display = 'none';
+    state.currentNews = [];
+    showEmptyState(isoString);
+    return;
+  }
   
   const news = await fetchNewsByDate(isoString);
   

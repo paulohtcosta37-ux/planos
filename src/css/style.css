@@ -428,7 +428,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   min-height: 410px; /* Tamanho mínimo uniforme e confortável */
-  height: 100%;
+  height: auto;
   gap: 16px;
   transition: var(--transition-spring);
   position: relative;

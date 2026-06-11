@@ -254,12 +254,23 @@ O retorno deve ser EXCLUSIVAMENTE uma lista em formato JSON contendo os objetos 
             model='gemini-2.5-flash',
             contents=prompt,
             config=types.GenerateContentConfig(
-                tools=[types.Tool(google_search=types.GoogleSearch())],
-                response_mime_type="application/json"
+                tools=[types.Tool(google_search=types.GoogleSearch())]
             )
         )
         
-        news_data = json.loads(response.text)
+        # Limpar o texto de possíveis marcações Markdown do JSON
+        response_text = response.text.strip()
+        if response_text.startswith("```json"):
+            response_text = response_text[7:]
+        elif response_text.startswith("```"):
+            response_text = response_text[3:]
+            
+        if response_text.endswith("```"):
+            response_text = response_text[:-3]
+            
+        response_text = response_text.strip()
+        
+        news_data = json.loads(response_text)
         return news_data
         
     except Exception as e:

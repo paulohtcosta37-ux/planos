@@ -148,7 +148,34 @@ function showEmptyState(isoString) {
   const [year, month, day] = isoString.split('-');
   const formattedDateStr = `${day}/${month}/${year}`;
   
-  emptyStateMessage.innerHTML = `Não há análises do comércio cadastradas para o dia <strong>${formattedDateStr}</strong>.<br>Para gerar relatórios diários de mercado, execute o agente de IA no terminal.`;
+  const today = new Date();
+  const todayISO = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+  
+  const emptyStateIcon = document.getElementById('emptyStateIcon');
+  const emptyStateTitle = document.getElementById('emptyStateTitle');
+  
+  if (isoString >= todayISO) {
+    // Hoje ou Futuro
+    if (emptyStateIcon) {
+      emptyStateIcon.innerText = 'schedule';
+      emptyStateIcon.className = 'material-symbols-rounded empty-icon animated-clock';
+    }
+    if (emptyStateTitle) {
+      emptyStateTitle.innerText = 'Novidades a Caminho!';
+    }
+    emptyStateMessage.innerHTML = `As análises e oportunidades do dia <strong>${formattedDateStr}</strong> estão sendo preparadas pela nossa inteligência artificial.<br><span style="display:inline-block; margin-top:14px; font-weight:700; color:var(--primary); font-size: 1.05rem;">Volte após as 18:00 para acompanhar as notícias do dia!</span>`;
+  } else {
+    // Passado
+    if (emptyStateIcon) {
+      emptyStateIcon.innerText = 'history_toggle_off';
+      emptyStateIcon.className = 'material-symbols-rounded empty-icon';
+    }
+    if (emptyStateTitle) {
+      emptyStateTitle.innerText = 'Sem Relatórios Disponíveis';
+    }
+    emptyStateMessage.innerHTML = `Não há registros de inteligência comercial cadastrados para o dia <strong>${formattedDateStr}</strong>.`;
+  }
+  
   emptyState.style.display = 'flex';
 }
 

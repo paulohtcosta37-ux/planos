@@ -76,12 +76,9 @@
 
       <!-- Estado Vazio (Sem notícias) -->
       <div class="empty-state-container" id="emptyState" style="display: none;">
-        <span class="material-symbols-rounded empty-icon">find_in_page</span>
-        <h3>Nenhuma análise disponível</h3>
-        <p id="emptyStateMessage">Ainda não há relatórios para o dia selecionado. Execute o agente de inteligência artificial para pesquisar notícias do dia.</p>
-        <div class="run-instruction-box">
-          <code>py agent/generate_news.py</code>
-        </div>
+        <span class="material-symbols-rounded empty-icon" id="emptyStateIcon">schedule</span>
+        <h3 id="emptyStateTitle">Aguardando Relatório de Hoje</h3>
+        <p id="emptyStateMessage">Volte após as 18:00 para acompanhar as notícias do dia.</p>
       </div>
     </main>
 

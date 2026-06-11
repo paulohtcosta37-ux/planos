@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 130" width="100%" height="100%">
+  <defs>
+    <!-- Import elegant fonts for SVG rendering -->
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&amp;family=Cormorant+Garamond:wght@600;700&amp;display=swap');
+      .monogram {
+        font-family: 'Alex Brush', 'Great Vibes', 'Brush Script MT', cursive;
+        font-size: 82px;
+        fill: #9E7D62; /* Golden-brown / Copper from logo */
+      }
+      .brand-name {
+        font-family: 'Cormorant Garamond', 'Playfair Display', 'Georgia', serif;
+        font-size: 19px;
+        font-weight: 700;
+        fill: #2D2520; /* Charcoal text */
+        letter-spacing: 1.5px;
+        text-anchor: middle;
+      }
+      .subtitle {
+        font-family: 'Alex Brush', 'Great Vibes', 'Brush Script MT', cursive;
+        font-size: 18px;
+        fill: #9E7D62;
+        text-anchor: middle;
+      }
+    </style>
+  </defs>
+
+  <!-- Stylized Cursive Monogram "JV" -->
+  <text x="100" y="70" class="monogram" text-anchor="middle">JV</text>
+
+  <!-- Main Name "JULIANA VELOSO" -->
+  <text x="100" y="98" class="brand-name">JULIANA VELOSO</text>
+
+  <!-- Subtitle "malhas compressivas" -->
+  <text x="100" y="118" class="subtitle">malhas compressivas</text>
+</svg>

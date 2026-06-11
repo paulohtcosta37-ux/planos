@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coleção Completa | JV Malhas Compressivas</title>
+  <meta name="description" content="Explore nosso catálogo de modeladores premium, sutiãs pós-cirúrgicos e faixas modeladoras. Filtre por linha e categoria.">
+  <link rel="stylesheet" href="./assets/css/style.css?v=2.0">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos Adicionais Baseados nos Prints Enviados (Aesthetics 2026) */
+    .pill-nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 90px;
+      padding: 0 40px;
+    }
+    .nav-pill-menu {
+      display: flex;
+      align-items: center;
+      background: rgba(45, 37, 32, 0.05);
+      border: 1px solid var(--color-border);
+      border-radius: 50px;
+      padding: 6px;
+      backdrop-filter: var(--glass-blur);
+    }
+    .nav-pill-menu a {
+      padding: 10px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border-radius: 50px;
+      transition: var(--transition);
+      text-transform: uppercase;
+    }
+    .nav-pill-menu a.active, .nav-pill-menu a:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+    }
+    .pill-badge-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-white);
+      border: 1px solid var(--color-charcoal);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .pill-badge-btn:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+      transform: translateY(-2px);
+    }
+
+    /* Layout do Catálogo com Filtro */
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      margin-top: 60px;
+      margin-bottom: 100px;
+    }
+
+    /* Filtros Laterais Estilo Glassmorphism (inspirado no Keep Pushing) */
+    .filter-sidebar {
+      background: rgba(253, 251, 247, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 30px;
+      position: sticky;
+      top: 120px;
+      height: fit-content;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-group {
+      margin-bottom: 30px;
+    }
+
+    .filter-group:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .filter-title {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--color-charcoal);
+    }
+
+    /* Opções em Pílula e Checkbox Premium */
+    .filter-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .filter-option {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-text-dark);
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .filter-option input {
+      display: none;
+    }
+
+    .custom-check {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--color-text-muted);
+      border-radius: 4px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      background-color: var(--color-white);
+    }
+
+    .filter-option input:checked + .custom-check {
+      background-color: var(--color-charcoal);
+      border-color: var(--color-charcoal);
+    }
+
+    .filter-option input:checked + .custom-check::after {
+      content: '\f00c';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      color: var(--color-white);
+      font-size: 10px;
+    }
+
+    .filter-option:hover {
+      color: var(--color-gold);
+    }
+
+    /* Banner de Página */
+    .page-banner {
+      background: linear-gradient(135deg, #F6F1E9 0%, #EFE9DE 100%);
+      padding: 60px 0;
+      border-bottom: 1px solid var(--color-border);
+      text-align: center;
+    }
+
+    .page-title {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .page-breadcrumbs {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--color-gold);
+    }
+
+    .active-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+
+    .active-filter-tag {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .active-filter-tag i {
+      cursor: pointer;
+      font-size: 10px;
+    }
+
+    .clear-filters-btn {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--color-gold);
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    /* Responsividade */
+    @media (max-width: 992px) {
+      .catalog-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .filter-sidebar {
+        position: static;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Premium -->
+  <header id="main-header">
+    <div class="container pill-nav-container">
+      <a href="./index.html" class="logo" style="display: flex; align-items: center; height: 65px; padding: 5px 0;">
+        <img src="./assets/images/logo.svg" alt="Juliana Veloso Logo" style="height: 100%; width: auto;">
+      </a>
+      
+      <!-- Menu de Navegação Pílula -->
+      <nav class="nav-pill-menu">
+        <a href="./index.html">Início</a>
+        <a href="./produtos.html" class="active">Coleção</a>
+        <a href="./carrinho.html">Carrinho</a>
+        <a id="admin-link" href="./admin.html" style="display: none;">Painel</a>
+      </nav>
+      
+      <div class="nav-actions">
+        <!-- Conta e Login -->
+        <a href="./login.html" id="user-btn" class="pill-badge-btn">
+          <i class="fa-regular fa-user"></i>
+          <span id="user-name-txt">Entrar</span>
+        </a>
+        
+        <!-- Carrinho de Compras -->
+        <a href="./carrinho.html" class="nav-btn" style="margin-left: 8px;">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="badge" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner da Página -->
+  <section class="page-banner">
+    <div class="container">
+      <h1 class="page-title">Catálogo de Produtos</h1>
+      <div class="page-breadcrumbs">
+        <a href="./index.html">Início</a> &nbsp;/&nbsp; Coleção
+      </div>
+    </div>
+  </section>
+
+  <!-- Corpo do Catálogo -->
+  <main class="container">
+    <div class="catalog-layout">
+      <!-- Filtro Lateral -->
+      <aside class="filter-sidebar">
+        <!-- Filtro por Gênero -->
+        <div class="filter-group">
+          <h3 class="filter-title">Gênero</h3>
+          <div class="filter-options">
+            <label class="filter-option">
+              <input type="checkbox" name="gender" value="feminino" class="filter-chk">
+              <span class="custom-check"></span>
+              Feminino
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" name="gender" value="masculino" class="filter-chk">
+              <span class="custom-check"></span>
+              Masculino
+            </label>
+          </div>
+        </div>
+
+        <!-- Filtro por Categoria -->
+        <div class="filter-group">
+          <h3 class="filter-title">Categoria</h3>
+          <div class="filter-options">
+            <label class="filter-option">
+              <input type="checkbox" name="category" value="modeladores" class="filter-chk">
+              <span class="custom-check"></span>
+              Modeladores
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" name="category" value="sutias" class="filter-chk">
+              <span class="custom-check"></span>
+              Sutiãs Cirúrgicos
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" name="category" value="cintas" class="filter-chk">
+              <span class="custom-check"></span>
+              Cintas / Faixas
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" name="category" value="calcas" class="filter-chk">
+              <span class="custom-check"></span>
+              Calças Culote
+            </label>
+          </div>
+        </div>
+
+        <!-- Filtro por Linha -->
+        <div class="filter-group">
+          <h3 class="filter-title">Linha</h3>
+          <div class="filter-options">
+            <label class="filter-option">
+              <input type="checkbox" name="line" value="Premium" class="filter-chk">
+              <span class="custom-check"></span>
+              Linha Premium
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" name="line" value="Power" class="filter-chk">
+              <span class="custom-check"></span>
+              Linha Power
+            </label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Vitrine de Produtos -->
+      <section>
+        <!-- Filtros Ativos -->
+        <div class="active-filters" id="active-filters-container" style="display: none;">
+          <span style="font-size: 13px; color: var(--color-text-muted); margin-right: 8px;">Filtros:</span>
+          <div id="active-tags" style="display: inline-flex; gap: 8px; flex-wrap: wrap;"></div>
+          <button class="clear-filters-btn" id="clear-filters-link">Limpar Todos</button>
+        </div>
+
+        <div class="products-grid" id="catalog-products-container">
+          <!-- Inserido dinamicamente via JS -->
+          <div style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">
+            <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+            <p style="margin-top: 12px;">Carregando produtos...</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <h2>JV MALHAS</h2>
+        <p>A união perfeita entre ciência médica e elegância estética na produção de malhas modeladoras compressivas de altíssimo padrão.</p>
+        <div class="footer-socials">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Coleção</h3>
+        <ul>
+          <li><a href="./produtos.html?categoria=modeladores">Modeladores</a></li>
+          <li><a href="./produtos.html?categoria=sutias">Sutiãs Cirúrgicos</a></li>
+          <li><a href="./produtos.html?categoria=cintas">Cintas Modeladoras</a></li>
+          <li><a href="./produtos.html?categoria=calcas">Calças Culote</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Menu</h3>
+        <ul>
+          <li><a href="./index.html">Início</a></li>
+          <li><a href="./produtos.html">Coleções</a></li>
+          <li><a href="./carrinho.html">Ver Carrinho</a></li>
+          <li><a href="./login.html">Minha Conta</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Contato & Info</h3>
+        <ul>
+          <li><a href="#"><i class="fa-solid fa-phone"></i> (31) 99876-5432</a></li>
+          <li><a href="#"><i class="fa-solid fa-envelope"></i> suporte@jvmalhas.com.br</a></li>
+          <li><a href="#"><i class="fa-solid fa-shield-halved"></i> Compra 100% Protegida</a></li>
+          <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Envio para todo o Brasil</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container footer-bottom">
+      <p>&copy; 2026 JV Malhas Compressivas. Todos os direitos reservados. Catálogo Yoga Indústria.</p>
+      <p>Desenvolvido com <i class="fa-solid fa-heart" style="color: var(--color-gold);"></i> por Antigravity</p>
+    </div>
+  </footer>
+
+  <!-- Firebase Logic Integration (ES Modules) -->
+  <script type="module">
+    import { subscribeToAuth, isAdmin } from "./assets/js/auth.js";
+    import { getProducts } from "./assets/js/db.js";
+    import { getCartTotals } from "./assets/js/cart.js";
+
+    let allProducts = [];
+
+    // Atualiza o estado da navbar baseado na autenticação
+    subscribeToAuth((user) => {
+      const userNameTxt = document.getElementById("user-name-txt");
+      const userBtn = document.getElementById("user-btn");
+      const adminLink = document.getElementById("admin-link");
+
+      if (user) {
+        userNameTxt.textContent = user.displayName ? user.displayName.split(" ")[0] : "Minha Conta";
+        userBtn.href = "./login.html";
+        if (isAdmin()) {
+          adminLink.style.display = "inline-block";
+        } else {
+          adminLink.style.display = "none";
+        }
+      } else {
+        userNameTxt.textContent = "Entrar";
+        userBtn.href = "./login.html";
+        adminLink.style.display = "none";
+      }
+    });
+
+    // Atualiza o número de itens no carrinho (atualiza todos os badges)
+    function updateCartCount() {
+      const totals = getCartTotals();
+      const badges = document.querySelectorAll(".badge");
+      badges.forEach(b => {
+        b.textContent = totals.count;
+      });
+    }
+    updateCartCount();
+
+    // Filtros Ativos do Estado da URL e UI
+    const filters = {
+      gender: [],
+      category: [],
+      line: []
+    };
+
+    // Lê os filtros iniciais da URL
+    function parseUrlFilters() {
+      const params = new URLSearchParams(window.location.search);
+      
+      const paramGender = params.get("genero");
+      if (paramGender) filters.gender = paramGender.split(",");
+      
+      const paramCategory = params.get("categoria");
+      if (paramCategory) filters.category = paramCategory.split(",");
+      
+      const paramLine = params.get("linha");
+      if (paramLine) filters.line = paramLine.split(",");
+
+      // Marca os checkboxes na UI correspondentes aos filtros da URL
+      document.querySelectorAll(".filter-chk").forEach(chk => {
+        const name = chk.name;
+        const val = chk.value;
+        if (filters[name] && filters[name].includes(val)) {
+          chk.checked = true;
+        }
+      });
+    }
+
+    // Atualiza a visualização com base nos filtros
+    function renderProducts() {
+      const container = document.getElementById("catalog-products-container");
+      
+      // Filtra os produtos
+      const filtered = allProducts.filter(p => {
+        // Filtro de gênero
+        if (filters.gender.length > 0 && !filters.gender.includes(p.gender)) return false;
+        // Filtro de categoria
+        if (filters.category.length > 0 && !filters.category.includes(p.category)) return false;
+        // Filtro de linha
+        if (filters.line.length > 0 && !filters.line.includes(p.line)) return false;
+        return true;
+      });
+
+      // Renderiza na tela
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted); padding: 40px 0;">
+            <i class="fa-regular fa-folder-open fa-3x" style="color: var(--color-champagne); margin-bottom: 16px;"></i>
+            <p>Nenhum produto atende aos filtros selecionados.</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = filtered.map(p => `
+          <div class="product-card" onclick="location.href='./produto-detalhe.html?id=${p.id}'">
+            <span class="product-tag">${p.line}</span>
+            <div class="product-img-wrapper">
+              <img src="${p.images[0] || './assets/images/placeholder.jpeg'}" alt="${p.name}" class="product-img">
+            </div>
+            <div class="product-info">
+              <span class="product-code">Cód. ${p.code}</span>
+              <h3 class="product-name">${p.name}</h3>
+              <div class="product-price-row">
+                <span class="product-price">R$ ${p.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <span class="product-price-original">R$ ${(p.price * 1.3).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      // Atualiza tags de filtros visíveis
+      renderActiveFilterTags();
+    }
+
+    function renderActiveFilterTags() {
+      const tagsContainer = document.getElementById("active-tags");
+      const filterSection = document.getElementById("active-filters-container");
+      tagsContainer.innerHTML = "";
+
+      let hasFilters = false;
+      const categoryMap = { modeladores: "Modeladores", sutias: "Sutiãs", cintas: "Cintas", calcas: "Calças" };
+      const genderMap = { feminino: "Feminino", masculino: "Masculino" };
+
+      // Gera tags para Gêneros
+      filters.gender.forEach(g => {
+        hasFilters = true;
+        createTag(g, genderMap[g] || g, "gender");
+      });
+
+      // Gera tags para Categorias
+      filters.category.forEach(c => {
+        hasFilters = true;
+        createTag(c, categoryMap[c] || c, "category");
+      });
+
+      // Gera tags para Linhas
+      filters.line.forEach(l => {
+        hasFilters = true;
+        createTag(l, `Linha ${l}`, "line");
+      });
+
+      if (hasFilters) {
+        filterSection.style.display = "flex";
+      } else {
+        filterSection.style.display = "none";
+      }
+    }
+
+    function createTag(val, label, filterType) {
+      const tag = document.createElement("div");
+      tag.className = "active-filter-tag";
+      tag.innerHTML = `${label} <i class="fa-solid fa-xmark" data-val="${val}" data-type="${filterType}"></i>`;
+      
+      tag.querySelector("i").addEventListener("click", (e) => {
+        const valueToRemove = e.target.getAttribute("data-val");
+        const type = e.target.getAttribute("data-type");
+        
+        filters[type] = filters[type].filter(item => item !== valueToRemove);
+        
+        // Desmarca checkbox
+        const chk = document.querySelector(`.filter-chk[name="${type}"][value="${valueToRemove}"]`);
+        if (chk) chk.checked = false;
+        
+        // Atualiza URL
+        updateUrl();
+        // Recarrega
+        renderProducts();
+      });
+      
+      document.getElementById("active-tags").appendChild(tag);
+    }
+
+    function updateUrl() {
+      const params = new URLSearchParams();
+      if (filters.gender.length > 0) params.set("genero", filters.gender.join(","));
+      if (filters.category.length > 0) params.set("categoria", filters.category.join(","));
+      if (filters.line.length > 0) params.set("linha", filters.line.join(","));
+      
+      const newUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "");
+      window.history.pushState({}, '', newUrl);
+    }
+
+    // Escuta mudanças nos checkboxes
+    document.querySelectorAll(".filter-chk").forEach(chk => {
+      chk.addEventListener("change", (e) => {
+        const name = e.target.name;
+        const val = e.target.value;
+        const checked = e.target.checked;
+
+        if (checked) {
+          if (!filters[name].includes(val)) filters[name].push(val);
+        } else {
+          filters[name] = filters[name].filter(item => item !== val);
+        }
+
+        updateUrl();
+        renderProducts();
+      });
+    });
+
+    // Limpa todos os filtros
+    document.getElementById("clear-filters-link").addEventListener("click", () => {
+      filters.gender = [];
+      filters.category = [];
+      filters.line = [];
+      
+      document.querySelectorAll(".filter-chk").forEach(chk => chk.checked = false);
+      
+      updateUrl();
+      renderProducts();
+    });
+
+    // Carga inicial
+    async function loadCatalog() {
+      try {
+        allProducts = await getProducts();
+        parseUrlFilters();
+        renderProducts();
+      } catch (error) {
+        console.error("Erro ao carregar catálogo:", error);
+        document.getElementById("catalog-products-container").innerHTML = `
+          <p style="grid-column: 1/-1; text-align: center; color: var(--color-error);">Erro ao carregar produtos. Recarregue a página.</p>
+        `;
+      }
+    }
+
+    loadCatalog();
+  </script>
+
+  <!-- App-like Bottom Tab Bar for Mobile -->
+  <div class="mobile-tab-bar">
+    <a href="./index.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-house"></i>
+      <span>Início</span>
+    </a>
+    <a href="./produtos.html" class="mobile-tab-item active">
+      <i class="fa-solid fa-shapes"></i>
+      <span>Coleção</span>
+    </a>
+    <a href="./carrinho.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>Carrinho</span>
+      <span class="badge">0</span>
+    </a>
+    <a href="./login.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-user"></i>
+      <span>Conta</span>
+    </a>
+  </div>
+</body>
+</html>

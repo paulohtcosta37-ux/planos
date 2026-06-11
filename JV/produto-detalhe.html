@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Produto | JV Malhas Compressivas</title>
+  <link rel="stylesheet" href="./assets/css/style.css?v=2.0">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos Adicionais Baseados nos Prints Enviados (Aesthetics 2026) */
+    .pill-nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 90px;
+      padding: 0 40px;
+    }
+    .nav-pill-menu {
+      display: flex;
+      align-items: center;
+      background: rgba(45, 37, 32, 0.05);
+      border: 1px solid var(--color-border);
+      border-radius: 50px;
+      padding: 6px;
+      backdrop-filter: var(--glass-blur);
+    }
+    .nav-pill-menu a {
+      padding: 10px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border-radius: 50px;
+      transition: var(--transition);
+      text-transform: uppercase;
+    }
+    .nav-pill-menu a.active, .nav-pill-menu a:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+    }
+    .pill-badge-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-white);
+      border: 1px solid var(--color-charcoal);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .pill-badge-btn:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+      transform: translateY(-2px);
+    }
+
+    /* Layout Detalhado do Produto */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 60px;
+      margin-bottom: 100px;
+    }
+
+    /* Galeria de Fotos */
+    .gallery-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .main-image-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 130%;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      background-color: #F6F1E9;
+    }
+
+    .main-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .thumbnails-row {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .thumbnail-card {
+      width: 80px;
+      height: 100px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: var(--transition);
+      background-color: #F6F1E9;
+    }
+
+    .thumbnail-card.active, .thumbnail-card:hover {
+      border-color: var(--color-gold);
+      transform: scale(1.05);
+    }
+
+    .thumbnail-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Painel de Informações e Compra (Glassmorphism) */
+    .info-panel {
+      background: rgba(253, 251, 247, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+    }
+
+    .info-tag {
+      background-color: var(--color-champagne);
+      color: var(--color-charcoal);
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-radius: 50px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .info-code {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .info-name {
+      font-size: 36px;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .info-price {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 24px;
+    }
+
+    .info-desc {
+      color: var(--color-text-muted);
+      margin-bottom: 30px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* Seletor de Tamanhos Estilo Pílula */
+    .size-title {
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .sizes-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .size-btn {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      color: var(--color-text-dark);
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .size-btn:hover {
+      border-color: var(--color-gold);
+      color: var(--color-gold);
+    }
+
+    .size-btn.active {
+      background-color: var(--color-charcoal);
+      border-color: var(--color-charcoal);
+      color: var(--color-white);
+    }
+
+    /* Formulário de Medidas Customizadas (inspirado no Spur+fit input style) */
+    .custom-measures-box {
+      border: 1px solid var(--color-border);
+      background-color: rgba(228, 212, 200, 0.15);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 30px;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .measures-title {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      color: var(--color-charcoal);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .measures-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .measure-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .measure-input-group label {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--color-text-dark);
+    }
+
+    .measure-input {
+      padding: 10px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      background: var(--color-white);
+      color: var(--color-charcoal);
+      transition: var(--transition);
+    }
+
+    .measure-input:focus {
+      outline: none;
+      border-color: var(--color-gold);
+      box-shadow: 0 0 0 2px rgba(197, 168, 128, 0.15);
+    }
+
+    /* Compra e Quantidade */
+    .purchase-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .qty-select {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-border);
+      border-radius: 50px;
+      background: var(--color-white);
+      overflow: hidden;
+      width: 120px;
+    }
+
+    .qty-btn {
+      border: none;
+      background: none;
+      width: 40px;
+      height: 48px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .qty-btn:hover {
+      background-color: var(--bg-cream);
+    }
+
+    .qty-number {
+      width: 40px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .btn-buy {
+      flex-grow: 1;
+      height: 48px;
+      font-size: 14px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 992px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Premium -->
+  <header id="main-header">
+    <div class="container pill-nav-container">
+      <a href="./index.html" class="logo" style="display: flex; align-items: center; height: 65px; padding: 5px 0;">
+        <img src="./assets/images/logo.svg" alt="Juliana Veloso Logo" style="height: 100%; width: auto;">
+      </a>
+      
+      <!-- Menu de Navegação Pílula -->
+      <nav class="nav-pill-menu">
+        <a href="./index.html">Início</a>
+        <a href="./produtos.html" class="active">Coleção</a>
+        <a href="./carrinho.html">Carrinho</a>
+        <a id="admin-link" href="./admin.html" style="display: none;">Painel</a>
+      </nav>
+      
+      <div class="nav-actions">
+        <!-- Conta e Login -->
+        <a href="./login.html" id="user-btn" class="pill-badge-btn">
+          <i class="fa-regular fa-user"></i>
+          <span id="user-name-txt">Entrar</span>
+        </a>
+        
+        <!-- Carrinho de Compras -->
+        <a href="./carrinho.html" class="nav-btn" style="margin-left: 8px;">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="badge" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="container">
+    <div class="detail-grid" id="product-detail-container">
+      <!-- Carregando -->
+      <div style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted); padding: 80px 0;">
+        <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+        <p style="margin-top: 12px;">Carregando detalhes do produto premium...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <h2>JV MALHAS</h2>
+        <p>A união perfeita entre ciência médica e elegância estética na produção de malhas modeladoras compressivas de altíssimo padrão.</p>
+        <div class="footer-socials">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Coleção</h3>
+        <ul>
+          <li><a href="./produtos.html?categoria=modeladores">Modeladores</a></li>
+          <li><a href="./produtos.html?categoria=sutias">Sutiãs Cirúrgicos</a></li>
+          <li><a href="./produtos.html?categoria=cintas">Cintas Modeladoras</a></li>
+          <li><a href="./produtos.html?categoria=calcas">Calças Culote</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Menu</h3>
+        <ul>
+          <li><a href="./index.html">Início</a></li>
+          <li><a href="./produtos.html">Coleções</a></li>
+          <li><a href="./carrinho.html">Ver Carrinho</a></li>
+          <li><a href="./login.html">Minha Conta</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Contato & Info</h3>
+        <ul>
+          <li><a href="#"><i class="fa-solid fa-phone"></i> (31) 99876-5432</a></li>
+          <li><a href="#"><i class="fa-solid fa-envelope"></i> suporte@jvmalhas.com.br</a></li>
+          <li><a href="#"><i class="fa-solid fa-shield-halved"></i> Compra 100% Protegida</a></li>
+          <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Envio para todo o Brasil</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container footer-bottom">
+      <p>&copy; 2026 JV Malhas Compressivas. Todos os direitos reservados. Catálogo Yoga Indústria.</p>
+      <p>Desenvolvido com <i class="fa-solid fa-heart" style="color: var(--color-gold);"></i> por Antigravity</p>
+    </div>
+  </footer>
+
+  <!-- Firebase Logic Integration (ES Modules) -->
+  <script type="module">
+    import { subscribeToAuth, isAdmin } from "./assets/js/auth.js";
+    import { getProductById } from "./assets/js/db.js";
+    import { addToCart, getCartTotals } from "./assets/js/cart.js";
+
+    // Atualiza o estado da navbar baseado na autenticação
+    subscribeToAuth((user) => {
+      const userNameTxt = document.getElementById("user-name-txt");
+      const userBtn = document.getElementById("user-btn");
+      const adminLink = document.getElementById("admin-link");
+
+      if (user) {
+        userNameTxt.textContent = user.displayName ? user.displayName.split(" ")[0] : "Minha Conta";
+        userBtn.href = "./login.html";
+        if (isAdmin()) {
+          adminLink.style.display = "inline-block";
+        } else {
+          adminLink.style.display = "none";
+        }
+      } else {
+        userNameTxt.textContent = "Entrar";
+        userBtn.href = "./login.html";
+        adminLink.style.display = "none";
+      }
+    });
+
+    // Atualiza o número de itens no carrinho (atualiza todos os badges)
+    function updateCartCount() {
+      const totals = getCartTotals();
+      const badges = document.querySelectorAll(".badge");
+      badges.forEach(b => {
+        b.textContent = totals.count;
+      });
+    }
+    updateCartCount();
+
+    // Carrega o produto
+    async function loadProductDetail() {
+      const params = new URLSearchParams(window.location.search);
+      const productId = params.get("id");
+      const container = document.getElementById("product-detail-container");
+
+      if (!productId) {
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--color-error); padding: 40px 0;">Produto não especificado.</p>`;
+        return;
+      }
+
+      try {
+        const product = await getProductById(productId);
+        if (!product) {
+          container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--color-error); padding: 40px 0;">Produto não encontrado no catálogo.</p>`;
+          return;
+        }
+
+        // Configura título da aba
+        document.title = `${product.name} | JV Malhas Compressivas`;
+
+        // Renderiza
+        container.innerHTML = `
+          <!-- Imagens -->
+          <div class="gallery-container">
+            <div class="main-image-wrapper">
+              <img id="detail-main-img" src="${product.images[0] || './assets/images/placeholder.jpeg'}" alt="${product.name}" class="main-image">
+            </div>
+            <div class="thumbnails-row">
+              ${product.images.map((img, idx) => `
+                <div class="thumbnail-card ${idx === 0 ? 'active' : ''}" data-src="${img}">
+                  <img src="${img}" alt="Miniatura ${idx + 1}">
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Informações -->
+          <div class="info-panel">
+            <span class="info-tag">${product.line}</span>
+            <span class="info-code">Cód. ${product.code}</span>
+            <h1 class="info-name">${product.name}</h1>
+            <div class="info-price">R$ ${product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+            <p class="info-desc">${product.description}</p>
+
+            <!-- Seletor de Tamanho -->
+            <span class="size-title">Escolha o Tamanho:</span>
+            <div class="sizes-grid" id="sizes-selectors">
+              <button class="size-btn" data-size="PP">PP</button>
+              <button class="size-btn" data-size="P">P</button>
+              <button class="size-btn" data-size="M" class="active">M</button>
+              <button class="size-btn" data-size="G">G</button>
+              <button class="size-btn" data-size="GG">GG</button>
+              <button class="size-btn" data-size="SG">SG</button>
+              <button class="size-btn" data-size="Customizado" style="border-style: dashed;"><i class="fa-solid fa-tape"></i> Sob Medida</button>
+            </div>
+
+            <!-- Caixa de Medidas Customizadas -->
+            <div class="custom-measures-box" id="custom-measures-form">
+              <h3 class="measures-title">
+                <i class="fa-solid fa-tape" style="color: var(--color-gold);"></i> 
+                Forneça suas Medidas (cm)
+              </h3>
+              <div class="measures-grid">
+                <div class="measure-input-group">
+                  <label for="measure-busto">Busto</label>
+                  <input type="number" id="measure-busto" class="measure-input" placeholder="ex: 92" min="30" max="250">
+                </div>
+                <div class="measure-input-group">
+                  <label for="measure-cintura">Cintura</label>
+                  <input type="number" id="measure-cintura" class="measure-input" placeholder="ex: 74" min="30" max="250">
+                </div>
+                <div class="measure-input-group">
+                  <label for="measure-quadril">Quadril</label>
+                  <input type="number" id="measure-quadril" class="measure-input" placeholder="ex: 104" min="30" max="250">
+                </div>
+              </div>
+              <p style="font-size: 11px; color: var(--color-text-muted); margin-top: 12px; font-style: italic;">
+                * Fabricamos seu modelador personalizado com base nas suas medidas corporais.
+              </p>
+            </div>
+
+            <!-- Compra -->
+            <div class="purchase-row">
+              <div class="qty-select">
+                <button class="qty-btn" id="btn-qty-minus">-</button>
+                <div class="qty-number" id="qty-value">1</div>
+                <button class="qty-btn" id="btn-qty-plus">+</button>
+              </div>
+              <button class="btn btn-primary btn-buy" id="btn-add-cart">
+                <i class="fa-solid fa-bag-shopping" style="margin-right: 8px;"></i> Adicionar ao Carrinho
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Ativa comportamento das miniaturas
+        const mainImg = document.getElementById("detail-main-img");
+        const thumbs = document.querySelectorAll(".thumbnail-card");
+        thumbs.forEach(t => {
+          t.addEventListener("click", () => {
+            thumbs.forEach(card => card.classList.remove("active"));
+            t.classList.add("active");
+            mainImg.src = t.getAttribute("data-src");
+          });
+        });
+
+        // Controle de quantidade
+        let qty = 1;
+        const qtyVal = document.getElementById("qty-value");
+        document.getElementById("btn-qty-minus").addEventListener("click", () => {
+          if (qty > 1) {
+            qty--;
+            qtyVal.textContent = qty;
+          }
+        });
+        document.getElementById("btn-qty-plus").addEventListener("click", () => {
+          qty++;
+          qtyVal.textContent = qty;
+        });
+
+        // Controle de seleção de tamanho
+        let selectedSize = "M";
+        const sizeBtns = document.querySelectorAll(".size-btn");
+        const customForm = document.getElementById("custom-measures-form");
+        
+        // Marca inicial (M)
+        const initialBtn = document.querySelector('.size-btn[data-size="M"]');
+        if (initialBtn) initialBtn.classList.add("active");
+
+        sizeBtns.forEach(btn => {
+          btn.addEventListener("click", () => {
+            sizeBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            selectedSize = btn.getAttribute("data-size");
+            
+            if (selectedSize === "Customizado") {
+              customForm.style.display = "block";
+            } else {
+              customForm.style.display = "none";
+            }
+          });
+        });
+
+        // Clique no botão Adicionar ao Carrinho
+        document.getElementById("btn-add-cart").addEventListener("click", () => {
+          let customMeasures = null;
+          
+          if (selectedSize === "Customizado") {
+            const busto = document.getElementById("measure-busto").value.trim();
+            const cintura = document.getElementById("measure-cintura").value.trim();
+            const quadril = document.getElementById("measure-quadril").value.trim();
+            
+            if (!busto || !cintura || !quadril) {
+              alert("Por favor, preencha todos os campos de medidas (Busto, Cintura e Quadril) para fazer sob medida.");
+              return;
+            }
+            
+            customMeasures = {
+              busto: parseInt(busto),
+              cintura: parseInt(cintura),
+              quadril: parseInt(quadril)
+            };
+          }
+
+          // Adiciona ao carrinho
+          addToCart(product, qty, selectedSize, customMeasures);
+          
+          // Feedback de sucesso
+          const btn = document.getElementById("btn-add-cart");
+          const originalHtml = btn.innerHTML;
+          btn.innerHTML = `<i class="fa-solid fa-check" style="margin-right: 8px;"></i> Adicionado!`;
+          btn.style.backgroundColor = "var(--color-success)";
+          btn.style.borderColor = "var(--color-success)";
+          
+          setTimeout(() => {
+            btn.innerHTML = originalHtml;
+            btn.style.backgroundColor = "";
+            btn.style.borderColor = "";
+          }, 2000);
+        });
+
+      } catch (error) {
+        console.error("Erro ao carregar produto:", error);
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--color-error); padding: 40px 0;">Erro ao conectar ao banco de dados.</p>`;
+      }
+    }
+
+    loadProductDetail();
+  </script>
+
+  <!-- App-like Bottom Tab Bar for Mobile -->
+  <div class="mobile-tab-bar">
+    <a href="./index.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-house"></i>
+      <span>Início</span>
+    </a>
+    <a href="./produtos.html" class="mobile-tab-item active">
+      <i class="fa-solid fa-shapes"></i>
+      <span>Coleção</span>
+    </a>
+    <a href="./carrinho.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>Carrinho</span>
+      <span class="badge">0</span>
+    </a>
+    <a href="./login.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-user"></i>
+      <span>Conta</span>
+    </a>
+  </div>
+</body>
+</html>

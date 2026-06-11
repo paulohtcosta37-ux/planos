@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Conta | JV Malhas Compressivas</title>
+  <link rel="stylesheet" href="./assets/css/style.css?v=2.0">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos Adicionais Baseados nos Prints Enviados (Aesthetics 2026) */
+    .pill-nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 90px;
+      padding: 0 40px;
+    }
+    .nav-pill-menu {
+      display: flex;
+      align-items: center;
+      background: rgba(45, 37, 32, 0.05);
+      border: 1px solid var(--color-border);
+      border-radius: 50px;
+      padding: 6px;
+      backdrop-filter: var(--glass-blur);
+    }
+    .nav-pill-menu a {
+      padding: 10px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border-radius: 50px;
+      transition: var(--transition);
+      text-transform: uppercase;
+    }
+    .nav-pill-menu a.active, .nav-pill-menu a:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+    }
+    .pill-badge-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-white);
+      border: 1px solid var(--color-charcoal);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .pill-badge-btn:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+      transform: translateY(-2px);
+    }
+
+    /* Tela de Login */
+    .login-container {
+      max-width: 450px;
+      margin: 80px auto 120px auto;
+    }
+
+    .login-card {
+      background: rgba(253, 251, 247, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .login-tabs {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 10px;
+    }
+
+    .login-tab {
+      flex: 1;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      padding-bottom: 10px;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .login-tab.active {
+      color: var(--color-charcoal);
+    }
+
+    .login-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -11px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--color-gold);
+    }
+
+    .form-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group label {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--color-text-dark);
+      letter-spacing: 1px;
+    }
+
+    .input-field {
+      padding: 12px 16px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      background: var(--color-white);
+      color: var(--color-charcoal);
+      transition: var(--transition);
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--color-gold);
+      box-shadow: 0 0 0 2px rgba(197, 168, 128, 0.15);
+    }
+
+    /* Divisor OR */
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      color: var(--color-text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex-grow: 1;
+      height: 1px;
+      background-color: var(--color-border);
+    }
+
+    .divider::before { margin-right: 16px; }
+    .divider::after { margin-left: 16px; }
+
+    /* Google Button */
+    .btn-google {
+      width: 100%;
+      height: 48px;
+      background-color: var(--color-white);
+      border: 1px solid var(--color-border);
+      color: var(--color-text-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-weight: 500;
+      font-size: 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-google:hover {
+      background-color: #F6F1E9;
+      border-color: var(--color-gold);
+    }
+
+    .btn-google img {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 48px;
+      margin-top: 10px;
+    }
+
+    /* Logged Panel */
+    .account-card {
+      background: rgba(253, 251, 247, 0.55);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 50px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--color-champagne);
+      color: var(--color-charcoal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px auto;
+      border: 2px solid var(--color-gold);
+      object-fit: cover;
+    }
+
+    .admin-badge {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .btn-admin-panel {
+      width: 100%;
+      height: 48px;
+      background-color: var(--color-gold);
+      color: var(--color-white);
+      border: 1px solid var(--color-gold);
+      margin-bottom: 12px;
+    }
+
+    .btn-admin-panel:hover {
+      background-color: var(--color-gold-hover);
+      border-color: var(--color-gold-hover);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Premium -->
+  <header id="main-header">
+    <div class="container pill-nav-container">
+      <a href="./index.html" class="logo" style="display: flex; align-items: center; height: 65px; padding: 5px 0;">
+        <img src="./assets/images/logo.svg" alt="Juliana Veloso Logo" style="height: 100%; width: auto;">
+      </a>
+      
+      <!-- Menu de Navegação Pílula -->
+      <nav class="nav-pill-menu">
+        <a href="./index.html">Início</a>
+        <a href="./produtos.html">Coleção</a>
+        <a href="./carrinho.html">Carrinho</a>
+        <a id="admin-link" href="./admin.html" style="display: none;">Painel</a>
+      </nav>
+      
+      <div class="nav-actions">
+        <!-- Conta e Login -->
+        <a href="./login.html" id="user-btn" class="pill-badge-btn">
+          <i class="fa-regular fa-user"></i>
+          <span id="user-name-txt">Entrar</span>
+        </a>
+        
+        <!-- Carrinho de Compras -->
+        <a href="./carrinho.html" class="nav-btn" style="margin-left: 8px;">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="badge" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Corpo da Tela -->
+  <main class="container">
+    <div class="login-container" id="auth-panel-wrapper">
+      <!-- Carregando -->
+      <div style="text-align: center; color: var(--color-text-muted); padding: 80px 0;">
+        <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+        <p style="margin-top: 12px;">Sincronizando com o Firebase...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <h2>JV MALHAS</h2>
+        <p>A união perfeita entre ciência médica e elegância estética na produção de malhas modeladoras compressivas de altíssimo padrão.</p>
+        <div class="footer-socials">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Coleção</h3>
+        <ul>
+          <li><a href="./produtos.html?categoria=modeladores">Modeladores</a></li>
+          <li><a href="./produtos.html?categoria=sutias">Sutiãs Cirúrgicos</a></li>
+          <li><a href="./produtos.html?categoria=cintas">Cintas Modeladoras</a></li>
+          <li><a href="./produtos.html?categoria=calcas">Calças Culote</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Menu</h3>
+        <ul>
+          <li><a href="./index.html">Início</a></li>
+          <li><a href="./produtos.html">Coleções</a></li>
+          <li><a href="./carrinho.html">Ver Carrinho</a></li>
+          <li><a href="./login.html">Minha Conta</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Contato & Info</h3>
+        <ul>
+          <li><a href="#"><i class="fa-solid fa-phone"></i> (31) 99876-5432</a></li>
+          <li><a href="#"><i class="fa-solid fa-envelope"></i> suporte@jvmalhas.com.br</a></li>
+          <li><a href="#"><i class="fa-solid fa-shield-halved"></i> Compra 100% Protegida</a></li>
+          <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Envio para todo o Brasil</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container footer-bottom">
+      <p>&copy; 2026 JV Malhas Compressivas. Todos os direitos reservados. Catálogo Yoga Indústria.</p>
+      <p>Desenvolvido com <i class="fa-solid fa-heart" style="color: var(--color-gold);"></i> por Antigravity</p>
+    </div>
+  </footer>
+
+  <!-- Firebase Logic Integration (ES Modules) -->
+  <script type="module">
+    import { 
+      subscribeToAuth, 
+      loginWithEmail, 
+      registerWithEmail, 
+      loginWithGoogle, 
+      logoutUser,
+      isAdmin 
+    } from "./assets/js/auth.js";
+    import { getCartTotals } from "./assets/js/cart.js";
+
+    let authStateLoaded = false;
+
+    // Atualiza o número de itens no carrinho (atualiza todos os badges)
+    function updateCartCount() {
+      const totals = getCartTotals();
+      const badges = document.querySelectorAll(".badge");
+      badges.forEach(b => {
+        b.textContent = totals.count;
+      });
+    }
+    updateCartCount();
+
+    // Escuta mudanças de auth para renderizar a tela apropriada
+    subscribeToAuth((user) => {
+      const userNameTxt = document.getElementById("user-name-txt");
+      const adminLink = document.getElementById("admin-link");
+      const wrapper = document.getElementById("auth-panel-wrapper");
+
+      if (user) {
+        userNameTxt.textContent = user.displayName ? user.displayName.split(" ")[0] : "Minha Conta";
+        
+        if (isAdmin()) {
+          adminLink.style.display = "inline-block";
+        } else {
+          adminLink.style.display = "none";
+        }
+
+        // Renderiza Painel Logado
+        wrapper.innerHTML = `
+          <div class="account-card">
+            ${user.photoURL 
+              ? `<img src="${user.photoURL}" alt="Avatar" class="profile-avatar">` 
+              : `<div class="profile-avatar"><i class="fa-regular fa-user"></i></div>`
+            }
+            
+            ${user.isAdmin 
+              ? `<span class="admin-badge">Administrador Geral</span>` 
+              : `<span class="admin-badge" style="background-color: var(--color-champagne); color: var(--color-text-dark);">Cliente Premium</span>`
+            }
+
+            <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 8px;">
+              Olá, ${user.displayName}!
+            </h2>
+            <p style="color: var(--color-text-muted); margin-bottom: 40px; font-size: 14px;">
+              E-mail: ${user.email}
+            </p>
+
+            ${user.isAdmin 
+              ? `<a href="./admin.html" class="btn btn-primary btn-admin-panel">Ir para o Painel Administrativo</a>` 
+              : `<a href="./produtos.html" class="btn btn-primary btn-admin-panel">Explorar Produtos</a>`
+            }
+            
+            <button class="btn btn-outline" id="btn-logout" style="width: 100%; height: 48px;">
+              Sair da Conta <i class="fa-solid fa-right-from-bracket" style="margin-left: 8px;"></i>
+            </button>
+          </div>
+        `;
+
+        // Associa botão logout
+        document.getElementById("btn-logout").addEventListener("click", async () => {
+          await logoutUser();
+        });
+
+      } else {
+        userNameTxt.textContent = "Entrar";
+        adminLink.style.display = "none";
+
+        // Renderiza Formulários de Entrada (Login / Cadastro)
+        wrapper.innerHTML = `
+          <div class="login-card">
+            <div class="login-tabs">
+              <div class="login-tab active" id="tab-login">Login</div>
+              <div class="login-tab" id="tab-register">Criar Conta</div>
+            </div>
+
+            <!-- Formulário Login -->
+            <div id="form-login-content">
+              <form id="form-login-action" class="form-inputs">
+                <div class="input-group">
+                  <label for="login-email">Seu E-mail</label>
+                  <input type="email" id="login-email" class="input-field" required placeholder="paulo@exemplo.com">
+                </div>
+                <div class="input-group">
+                  <label for="login-password">Senha</label>
+                  <input type="password" id="login-password" class="input-field" required placeholder="Sua senha">
+                </div>
+                <button type="submit" class="btn btn-primary btn-submit">Entrar</button>
+              </form>
+            </div>
+
+            <!-- Formulário Cadastro (Escondido por padrão) -->
+            <div id="form-register-content" style="display: none;">
+              <form id="form-register-action" class="form-inputs">
+                <div class="input-group">
+                  <label for="reg-name">Nome Completo</label>
+                  <input type="text" id="reg-name" class="input-field" required placeholder="ex: Paulo Silva">
+                </div>
+                <div class="input-group">
+                  <label for="reg-email">E-mail</label>
+                  <input type="email" id="reg-email" class="input-field" required placeholder="paulo@exemplo.com">
+                </div>
+                <div class="input-group">
+                  <label for="reg-password">Senha (mínimo 6 dígitos)</label>
+                  <input type="password" id="reg-password" class="input-field" required placeholder="Criar senha">
+                </div>
+                <button type="submit" class="btn btn-primary btn-submit">Cadastrar Conta</button>
+              </form>
+            </div>
+
+            <div class="divider">ou</div>
+
+            <!-- Botão Google -->
+            <button class="btn-google" id="btn-login-google">
+              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" alt="Google Logo">
+              Entrar com o Google
+            </button>
+          </div>
+        `;
+
+        setupAuthFormEvents();
+      }
+    });
+
+    function setupAuthFormEvents() {
+      const tabLogin = document.getElementById("tab-login");
+      const tabRegister = document.getElementById("tab-register");
+      const contentLogin = document.getElementById("form-login-content");
+      const contentRegister = document.getElementById("form-register-content");
+
+      // Alterna entre abas
+      tabLogin.addEventListener("click", () => {
+        tabLogin.classList.add("active");
+        tabRegister.classList.remove("active");
+        contentLogin.style.display = "block";
+        contentRegister.style.display = "none";
+      });
+
+      tabRegister.addEventListener("click", () => {
+        tabRegister.classList.add("active");
+        tabLogin.classList.remove("active");
+        contentRegister.style.display = "block";
+        contentLogin.style.display = "none";
+      });
+
+      // Ação de Login E-mail
+      document.getElementById("form-login-action").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("login-email").value.trim();
+        const pass = document.getElementById("login-password").value;
+        try {
+          await loginWithEmail(email, pass);
+        } catch (err) {
+          alert(err.message || "Falha ao fazer login.");
+        }
+      });
+
+      // Ação de Cadastro E-mail
+      document.getElementById("form-register-action").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("reg-name").value.trim();
+        const email = document.getElementById("reg-email").value.trim();
+        const pass = document.getElementById("reg-password").value;
+        
+        if (pass.length < 6) {
+          alert("A senha deve conter pelo menos 6 caracteres.");
+          return;
+        }
+
+        try {
+          await registerWithEmail(email, pass, name);
+        } catch (err) {
+          alert(err.message || "Falha ao criar conta.");
+        }
+      });
+
+      // Ação de Login Google
+      document.getElementById("btn-login-google").addEventListener("click", async () => {
+        try {
+          await loginWithGoogle();
+        } catch (err) {
+          alert("Falha no login com Google. Tente novamente.");
+        }
+      });
+    }
+  </script>
+
+  <!-- App-like Bottom Tab Bar for Mobile -->
+  <div class="mobile-tab-bar">
+    <a href="./index.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-house"></i>
+      <span>Início</span>
+    </a>
+    <a href="./produtos.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-shapes"></i>
+      <span>Coleção</span>
+    </a>
+    <a href="./carrinho.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>Carrinho</span>
+      <span class="badge">0</span>
+    </a>
+    <a href="./login.html" class="mobile-tab-item active">
+      <i class="fa-solid fa-user"></i>
+      <span>Conta</span>
+    </a>
+  </div>
+</body>
+</html>

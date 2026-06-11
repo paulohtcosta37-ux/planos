@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JV Malhas Compressivas | Premium Shapewear</title>
+  <meta name="description" content="Descubra a linha premium de malhas compressivas e modeladores pós-cirúrgicos sob medida. Conforto, alta tecnologia e modelagem perfeita.">
+  <link rel="stylesheet" href="./assets/css/style.css?v=2.0">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos Adicionais Baseados nos Prints Enviados (Aesthetics 2026) */
+    
+    /* Menu centralizado em estilo pílula (inspirado no GreenMotive) */
+    .pill-nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 90px;
+      padding: 0 40px;
+    }
+    
+    .nav-pill-menu {
+      display: flex;
+      align-items: center;
+      background: rgba(45, 37, 32, 0.05);
+      border: 1px solid var(--color-border);
+      border-radius: 50px;
+      padding: 6px;
+      backdrop-filter: var(--glass-blur);
+    }
+    
+    .nav-pill-menu a {
+      padding: 10px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border-radius: 50px;
+      transition: var(--transition);
+      text-transform: uppercase;
+    }
+    
+    .nav-pill-menu a.active, .nav-pill-menu a:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+    }
+    
+    /* Botão Badge Superior Direito (inspirado no GreenMotive/Spur+fit) */
+    .pill-badge-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-white);
+      border: 1px solid var(--color-charcoal);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    
+    .pill-badge-btn:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+      transform: translateY(-2px);
+    }
+    
+    /* Hero Section com Anotações Visuais (inspirado no Spur+fit) */
+    .hero-section {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: center;
+      padding: 60px 0;
+      min-height: 80vh;
+    }
+    
+    .hero-visuals {
+      position: relative;
+      width: 100%;
+      height: 550px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .hero-model-container {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+      height: auto;
+      aspect-ratio: 380 / 520;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    .hero-model-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* Efeito de Vidro Flutuante atrás da modelo (inspirado no Keep Pushing) */
+    .floating-glass-bg {
+      position: absolute;
+      width: 440px;
+      height: 440px;
+      background: rgba(228, 212, 200, 0.25);
+      border-radius: 50%;
+      z-index: -1;
+      filter: blur(40px);
+      animation: float 8s ease-in-out infinite alternate;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(-10px) scale(0.95); }
+      100% { transform: translateY(10px) scale(1.05); }
+    }
+    
+    /* Anotações de Linhas Técnicas (inspirado no Spur+fit) */
+    .callout-line {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+    }
+    
+    .callout-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--color-gold);
+      border: 2px solid var(--color-white);
+      box-shadow: 0 0 10px rgba(197, 168, 128, 0.6);
+      position: relative;
+    }
+    
+    .callout-dot::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1px solid var(--color-gold);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    
+    .callout-text {
+      background: rgba(253, 251, 247, 0.8);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--color-border);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-text-dark);
+      white-space: nowrap;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Posicionamento das Anotações */
+    .callout-1 { top: 25%; left: 0%; }
+    .callout-2 { bottom: 35%; right: -5%; }
+    
+    /* Grid de Categorias em Glassmorphism de Colunas (inspirado no GreenMotive) */
+    .glass-cols-section {
+      padding: 100px 0;
+      background: linear-gradient(180deg, var(--bg-cream) 0%, #F5EFEB 100%);
+    }
+    
+    .glass-cols-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 50px;
+    }
+    
+    .glass-col-card {
+      position: relative;
+      height: 500px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    
+    .glass-col-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--color-gold);
+    }
+    
+    .glass-col-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+    
+    .glass-col-card:hover .glass-col-img {
+      transform: scale(1.03);
+    }
+    
+    .glass-col-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(45, 37, 32, 0.95) 0%, rgba(45, 37, 32, 0.3) 50%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 40px;
+      color: var(--color-white);
+      transition: var(--transition);
+    }
+    
+    .glass-col-card:hover .glass-col-overlay {
+      background: linear-gradient(to top, rgba(45, 37, 32, 0.98) 0%, rgba(45, 37, 32, 0.5) 60%, transparent 100%);
+    }
+    
+    .glass-col-title {
+      font-size: 26px;
+      color: var(--color-white);
+      margin-bottom: 8px;
+    }
+    
+    .glass-col-desc {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+    
+    /* Indicador Numérico no topo do card (inspirado no Fuse) */
+    .glass-col-num {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--color-white);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 6px 14px;
+      border-radius: 50px;
+      backdrop-filter: var(--glass-blur);
+    }
+    
+    /* Seção de depoimentos com Glass Card centralizado (inspirado no Keep Pushing) */
+    .glass-showcase-section {
+      padding: 120px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      background-color: #ECE5DC;
+    }
+    
+    .glass-showcase-card {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(253, 251, 247, 0.45);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: var(--radius-lg);
+      padding: 60px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .glass-showcase-text {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      line-height: 1.4;
+      color: var(--color-charcoal);
+      margin-bottom: 30px;
+    }
+    
+    .glass-showcase-author {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      color: var(--color-gold);
+    }
+    
+    @media (max-width: 992px) {
+      .hero-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 40px 0;
+      }
+      .hero-visuals {
+        height: 480px;
+      }
+      .hero-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 20px 0 40px 0;
+        overflow: hidden;
+      }
+      .hero-visuals {
+        height: auto;
+        aspect-ratio: 1 / 1.1;
+        width: 100%;
+        max-width: 380px;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+      .hero-model-container {
+        width: 85%;
+        max-width: 300px;
+      }
+      .floating-glass-bg {
+        width: 100%;
+        height: 100%;
+        max-width: 340px;
+        max-height: 340px;
+      }
+      .glass-cols-grid {
+        grid-template-columns: 1fr;
+      }
+      .glass-col-card {
+        height: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Premium -->
+  <header id="main-header">
+    <div class="container pill-nav-container">
+      <a href="./index.html" class="logo" style="display: flex; align-items: center; height: 65px; padding: 5px 0;">
+        <img src="./assets/images/logo.svg" alt="Juliana Veloso Logo" style="height: 100%; width: auto;">
+      </a>
+      
+      <!-- Menu de Navegação Pílula -->
+      <nav class="nav-pill-menu">
+        <a href="./index.html" class="active">Início</a>
+        <a href="./produtos.html">Coleção</a>
+        <a href="./carrinho.html">Carrinho</a>
+        <a id="admin-link" href="./admin.html" style="display: none;">Painel</a>
+      </nav>
+      
+      <div class="nav-actions">
+        <!-- Conta e Login -->
+        <a href="./login.html" id="user-btn" class="pill-badge-btn">
+          <i class="fa-regular fa-user"></i>
+          <span id="user-name-txt">Entrar</span>
+        </a>
+        
+        <!-- Carrinho de Compras -->
+        <a href="./carrinho.html" class="nav-btn" style="margin-left: 8px;">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="badge" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="container">
+    <div class="hero-section">
+      <div class="hero-content">
+        <span class="hero-subtitle">Alta Costura & Lipo-Modelação</span>
+        <h1 class="hero-title">A compressão perfeita para a sua recuperação e contorno.</h1>
+        <p class="hero-desc">Modeladores pós-cirúrgicos e de uso diário criados com tecnologia avançada exclusiva Yoga. Feitos para abraçar e esculpir suas curvas com o máximo conforto e segurança.</p>
+        <div style="display: flex; gap: 16px; margin-top: 30px;">
+          <a href="./produtos.html" class="btn btn-primary">Ver Coleção</a>
+          <a href="./produtos.html?linha=Premium" class="btn btn-outline">Linha Premium</a>
+        </div>
+      </div>
+      
+      <!-- Visual Annotations Hero -->
+      <div class="hero-visuals">
+        <div class="floating-glass-bg"></div>
+        <div class="hero-model-container">
+          <img src="./assets/images/products/product_3019_img1.jpeg" alt="Modelador Premium JV" class="hero-model-img">
+        </div>
+        
+        <!-- Linhas e Pontos de Anotação (Spur+fit style) -->
+        <div class="callout-line callout-1">
+          <div class="callout-dot"></div>
+          <div class="callout-text">Tecido Exclusivo Yoga</div>
+        </div>
+        
+        <div class="callout-line callout-2">
+          <div class="callout-text">Dupla Regulagem Frontal</div>
+          <div class="callout-dot"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção das Três Colunas de Linhas (GreenMotive style) -->
+  <section class="glass-cols-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Nossas Linhas Exclusivas</span>
+        <h2 class="section-title">Encontre a compressão ideal para você</h2>
+      </div>
+      
+      <div class="glass-cols-grid">
+        <!-- Coluna 1: Linha Premium -->
+        <div class="glass-col-card" onclick="location.href='./produtos.html?linha=Premium'">
+          <div class="glass-col-num">01</div>
+          <img src="./assets/images/products/product_3004_img2.jpeg" alt="Linha Premium" class="glass-col-img">
+          <div class="glass-col-overlay">
+            <h3 class="glass-col-title">Linha Premium</h3>
+            <p class="glass-col-desc">Tecido, gramatura e compressão máxima. Opção exclusiva de fabricação sob medida para uma recuperação cirúrgica ideal.</p>
+            <span class="category-link">Explorar Coleção <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+        </div>
+        
+        <!-- Coluna 2: Linha Power -->
+        <div class="glass-col-card" onclick="location.href='./produtos.html?linha=Premium'"> <!-- O catálogo indica Premium e Power -->
+          <div class="glass-col-num">02</div>
+          <img src="./assets/images/products/product_3075_img1.jpeg" alt="Linha Power" class="glass-col-img">
+          <div class="glass-col-overlay">
+            <h3 class="glass-col-title">Linha Power</h3>
+            <p class="glass-col-desc">Reforços estratégicos de alta compressão com barbatanas flexíveis e modelagem acentuada de cintura.</p>
+            <span class="category-link">Explorar Coleção <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+        </div>
+        
+        <!-- Coluna 3: Linha Fitness & Estética -->
+        <div class="glass-col-card" onclick="location.href='./produtos.html?categoria=cintas'">
+          <div class="glass-col-num">03</div>
+          <img src="./assets/images/products/product_3022_img6.jpeg" alt="Cintas e Estética" class="glass-col-img">
+          <div class="glass-col-overlay">
+            <h3 class="glass-col-title">Estética & Fitness</h3>
+            <p class="glass-col-desc">Desenvolvidas para uso diário e prática de exercícios, promovendo drenagem postural e modelação natural.</p>
+            <span class="category-link">Explorar Coleção <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vitrine de Lançamentos -->
+  <section class="container" style="padding: 100px 0;">
+    <div class="section-header">
+      <span class="section-subtitle">Destaques da Tabela 2024</span>
+      <h2 class="section-title">Mais Vendidos</h2>
+    </div>
+    
+    <div class="products-grid" id="featured-products-container">
+      <!-- Inserido dinamicamente via JS -->
+      <div style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">
+        <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+        <p style="margin-top: 12px;">Carregando vitrine premium...</p>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+      <a href="./produtos.html" class="btn btn-outline">Ver Todo o Catálogo</a>
+    </div>
+  </section>
+
+  <!-- Testimonial Glass Card Section (Keep Pushing style) -->
+  <section class="glass-showcase-section">
+    <div class="glass-showcase-card">
+      <p class="glass-showcase-text">"A qualidade das malhas JV é incomparável. Comprei o modelador pós-cirúrgico sob medida e o ajuste foi simplesmente cirúrgico. Conforto incrível para o pós-operatório."</p>
+      <div class="glass-showcase-author">Dra. Mariana Vasconcelos — Cirurgiã Plástica</div>
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <h2>JV MALHAS</h2>
+        <p>A união perfeita entre ciência médica e elegância estética na produção de malhas modeladoras compressivas de altíssimo padrão.</p>
+        <div class="footer-socials">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Coleção</h3>
+        <ul>
+          <li><a href="./produtos.html?categoria=modeladores">Modeladores</a></li>
+          <li><a href="./produtos.html?categoria=sutias">Sutiãs Cirúrgicos</a></li>
+          <li><a href="./produtos.html?categoria=cintas">Cintas Modeladoras</a></li>
+          <li><a href="./produtos.html?categoria=calcas">Calças Culote</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Menu</h3>
+        <ul>
+          <li><a href="./index.html">Início</a></li>
+          <li><a href="./produtos.html">Coleções</a></li>
+          <li><a href="./carrinho.html">Ver Carrinho</a></li>
+          <li><a href="./login.html">Minha Conta</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Contato & Info</h3>
+        <ul>
+          <li><a href="#"><i class="fa-solid fa-phone"></i> (31) 99876-5432</a></li>
+          <li><a href="#"><i class="fa-solid fa-envelope"></i> suporte@jvmalhas.com.br</a></li>
+          <li><a href="#"><i class="fa-solid fa-shield-halved"></i> Compra 100% Protegida</a></li>
+          <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Envio para todo o Brasil</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container footer-bottom">
+      <p>&copy; 2026 JV Malhas Compressivas. Todos os direitos reservados. Catálogo Yoga Indústria.</p>
+      <p>Desenvolvido com <i class="fa-solid fa-heart" style="color: var(--color-gold);"></i> por Antigravity</p>
+    </div>
+  </footer>
+
+  <!-- Firebase Logic Integration (ES Modules) -->
+  <script type="module">
+    import { subscribeToAuth, isAdmin } from "./assets/js/auth.js";
+    import { getProducts } from "./assets/js/db.js";
+    import { getCartTotals } from "./assets/js/cart.js";
+
+    // Atualiza o estado da navbar baseado na autenticação
+    subscribeToAuth((user) => {
+      const userNameTxt = document.getElementById("user-name-txt");
+      const userBtn = document.getElementById("user-btn");
+      const adminLink = document.getElementById("admin-link");
+
+      if (user) {
+        userNameTxt.textContent = user.displayName ? user.displayName.split(" ")[0] : "Minha Conta";
+        userBtn.href = "./login.html"; // Vai para a tela onde ele pode ver seus dados/logout
+        
+        if (isAdmin()) {
+          adminLink.style.display = "inline-block";
+        } else {
+          adminLink.style.display = "none";
+        }
+      } else {
+        userNameTxt.textContent = "Entrar";
+        userBtn.href = "./login.html";
+        adminLink.style.display = "none";
+      }
+    });
+
+    // Atualiza o número de itens no carrinho (atualiza todos os badges)
+    function updateCartCount() {
+      const totals = getCartTotals();
+      const badges = document.querySelectorAll(".badge");
+      badges.forEach(b => {
+        b.textContent = totals.count;
+      });
+    }
+    
+    window.addEventListener("cartUpdated", updateCartCount);
+    updateCartCount();
+
+    // Carrega os produtos da vitrine
+    async function loadFeaturedProducts() {
+      const container = document.getElementById("featured-products-container");
+      try {
+        const products = await getProducts();
+        
+        // Pega os 4 primeiros produtos para a vitrine
+        const featured = products.slice(0, 4);
+        
+        if (featured.length === 0) {
+          container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Nenhum produto cadastrado no momento.</p>`;
+          return;
+        }
+
+        container.innerHTML = featured.map(p => `
+          <div class="product-card" onclick="location.href='./produto-detalhe.html?id=${p.id}'">
+            <span class="product-tag">${p.line}</span>
+            <div class="product-img-wrapper">
+              <img src="${p.images[0] || './assets/images/placeholder.jpeg'}" alt="${p.name}" class="product-img">
+            </div>
+            <div class="product-info">
+              <span class="product-code">Cód. ${p.code}</span>
+              <h3 class="product-name">${p.name}</h3>
+              <div class="product-price-row">
+                <span class="product-price">R$ ${p.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <span class="product-price-original">R$ ${(p.price * 1.3).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+          </div>
+        `).join("");
+
+      } catch (error) {
+        console.error("Erro ao carregar vitrine:", error);
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--color-error);">Erro ao conectar com o banco de dados. Tente novamente.</p>`;
+      }
+    }
+
+    loadFeaturedProducts();
+
+    // Efeito scrolled no header
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('main-header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+
+  <!-- App-like Bottom Tab Bar for Mobile -->
+  <div class="mobile-tab-bar">
+    <a href="./index.html" class="mobile-tab-item active">
+      <i class="fa-solid fa-house"></i>
+      <span>Início</span>
+    </a>
+    <a href="./produtos.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-shapes"></i>
+      <span>Coleção</span>
+    </a>
+    <a href="./carrinho.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>Carrinho</span>
+      <span class="badge">0</span>
+    </a>
+    <a href="./login.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-user"></i>
+      <span>Conta</span>
+    </a>
+  </div>
+</body>
+</html>

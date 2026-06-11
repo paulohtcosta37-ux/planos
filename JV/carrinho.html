@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seu Carrinho | JV Malhas Compressivas</title>
+  <link rel="stylesheet" href="./assets/css/style.css?v=2.0">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos Adicionais Baseados nos Prints Enviados (Aesthetics 2026) */
+    .pill-nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 90px;
+      padding: 0 40px;
+    }
+    .nav-pill-menu {
+      display: flex;
+      align-items: center;
+      background: rgba(45, 37, 32, 0.05);
+      border: 1px solid var(--color-border);
+      border-radius: 50px;
+      padding: 6px;
+      backdrop-filter: var(--glass-blur);
+    }
+    .nav-pill-menu a {
+      padding: 10px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border-radius: 50px;
+      transition: var(--transition);
+      text-transform: uppercase;
+    }
+    .nav-pill-menu a.active, .nav-pill-menu a:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+    }
+    .pill-badge-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-white);
+      border: 1px solid var(--color-charcoal);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .pill-badge-btn:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+      transform: translateY(-2px);
+    }
+
+    /* Layout do Carrinho */
+    .cart-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 48px;
+      margin-top: 60px;
+      margin-bottom: 100px;
+    }
+
+    /* Tabela de Itens (Glassmorphism) */
+    .cart-items-panel {
+      background: rgba(253, 251, 247, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cart-item-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 120px 100px 40px;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .cart-item-row:first-child {
+      padding-top: 0;
+    }
+
+    .cart-item-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .cart-item-img {
+      width: 100px;
+      height: 130px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      border: 1px solid var(--color-border);
+      background-color: #F6F1E9;
+    }
+
+    .cart-item-details h3 {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .cart-item-meta {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .custom-badge {
+      background-color: rgba(197, 168, 128, 0.15);
+      color: var(--color-gold);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 11px;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-border);
+      border-radius: 50px;
+      background: var(--color-white);
+      overflow: hidden;
+    }
+
+    .qty-controls button {
+      border: none;
+      background: none;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .qty-controls button:hover {
+      background-color: var(--bg-cream);
+    }
+
+    .qty-controls span {
+      width: 36px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .item-price-col {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--color-charcoal);
+      text-align: right;
+    }
+
+    .btn-remove {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-remove:hover {
+      color: var(--color-error);
+      transform: scale(1.1);
+    }
+
+    /* Painel do Resumo */
+    .summary-panel {
+      background: rgba(253, 251, 247, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+      position: sticky;
+      top: 120px;
+    }
+
+    .summary-title {
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--color-text-dark);
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-charcoal);
+    }
+
+    .checkout-btn {
+      width: 100%;
+      height: 52px;
+      font-size: 14px;
+      margin-top: 30px;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 60px 40px;
+    }
+
+    .empty-cart i {
+      color: var(--color-champagne);
+      margin-bottom: 24px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 992px) {
+      .cart-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Premium -->
+  <header id="main-header">
+    <div class="container pill-nav-container">
+      <a href="./index.html" class="logo" style="display: flex; align-items: center; height: 65px; padding: 5px 0;">
+        <img src="./assets/images/logo.svg" alt="Juliana Veloso Logo" style="height: 100%; width: auto;">
+      </a>
+      
+      <!-- Menu de Navegação Pílula -->
+      <nav class="nav-pill-menu">
+        <a href="./index.html">Início</a>
+        <a href="./produtos.html">Coleção</a>
+        <a href="./carrinho.html" class="active">Carrinho</a>
+        <a id="admin-link" href="./admin.html" style="display: none;">Painel</a>
+      </nav>
+      
+      <div class="nav-actions">
+        <!-- Conta e Login -->
+        <a href="./login.html" id="user-btn" class="pill-badge-btn">
+          <i class="fa-regular fa-user"></i>
+          <span id="user-name-txt">Entrar</span>
+        </a>
+        
+        <!-- Carrinho de Compras -->
+        <a href="./carrinho.html" class="nav-btn" style="margin-left: 8px;">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="badge" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main class="container">
+    <div class="cart-grid" id="cart-content-wrapper">
+      <!-- Carregando -->
+      <div style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted); padding: 80px 0;">
+        <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+        <p style="margin-top: 12px;">Carregando seu carrinho premium...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <h2>JV MALHAS</h2>
+        <p>A união perfeita entre ciência médica e elegância estética na produção de malhas modeladoras compressivas de altíssimo padrão.</p>
+        <div class="footer-socials">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Coleção</h3>
+        <ul>
+          <li><a href="./produtos.html?categoria=modeladores">Modeladores</a></li>
+          <li><a href="./produtos.html?categoria=sutias">Sutiãs Cirúrgicos</a></li>
+          <li><a href="./produtos.html?categoria=cintas">Cintas Modeladoras</a></li>
+          <li><a href="./produtos.html?categoria=calcas">Calças Culote</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Menu</h3>
+        <ul>
+          <li><a href="./index.html">Início</a></li>
+          <li><a href="./produtos.html">Coleções</a></li>
+          <li><a href="./carrinho.html">Ver Carrinho</a></li>
+          <li><a href="./login.html">Minha Conta</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Contato & Info</h3>
+        <ul>
+          <li><a href="#"><i class="fa-solid fa-phone"></i> (31) 99876-5432</a></li>
+          <li><a href="#"><i class="fa-solid fa-envelope"></i> suporte@jvmalhas.com.br</a></li>
+          <li><a href="#"><i class="fa-solid fa-shield-halved"></i> Compra 100% Protegida</a></li>
+          <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Envio para todo o Brasil</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container footer-bottom">
+      <p>&copy; 2026 JV Malhas Compressivas. Todos os direitos reservados. Catálogo Yoga Indústria.</p>
+      <p>Desenvolvido com <i class="fa-solid fa-heart" style="color: var(--color-gold);"></i> por Antigravity</p>
+    </div>
+  </footer>
+
+  <!-- Firebase Logic Integration (ES Modules) -->
+  <script type="module">
+    import { subscribeToAuth, isAdmin } from "./assets/js/auth.js";
+    import { 
+      getCartItems, 
+      removeFromCart, 
+      updateCartItemQuantity, 
+      getCartTotals 
+    } from "./assets/js/cart.js";
+
+    // Atualiza o estado da navbar baseado na autenticação
+    subscribeToAuth((user) => {
+      const userNameTxt = document.getElementById("user-name-txt");
+      const userBtn = document.getElementById("user-btn");
+      const adminLink = document.getElementById("admin-link");
+
+      if (user) {
+        userNameTxt.textContent = user.displayName ? user.displayName.split(" ")[0] : "Minha Conta";
+        userBtn.href = "./login.html";
+        if (isAdmin()) {
+          adminLink.style.display = "inline-block";
+        } else {
+          adminLink.style.display = "none";
+        }
+      } else {
+        userNameTxt.textContent = "Entrar";
+        userBtn.href = "./login.html";
+        adminLink.style.display = "none";
+      }
+    });
+
+    // Atualiza badges e recarrega os itens na tela
+    function updateCartUI() {
+      const totals = getCartTotals();
+      document.getElementById("cart-count").textContent = totals.count;
+      
+      const wrapper = document.getElementById("cart-content-wrapper");
+      const items = getCartItems();
+
+      if (items.length === 0) {
+        wrapper.innerHTML = `
+          <div class="cart-items-panel" style="grid-column: 1/-1;">
+            <div class="empty-cart">
+              <i class="fa-solid fa-bag-shopping fa-4x"></i>
+              <h2 style="margin-bottom: 8px;">Seu carrinho está vazio</h2>
+              <p style="color: var(--color-text-muted); margin-bottom: 30px;">
+                Adicione modeladores ou faixas do catálogo para iniciar suas compras.
+              </p>
+              <a href="./produtos.html" class="btn btn-primary">Ver Produtos</a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Renderiza grid com itens e resumo
+      wrapper.innerHTML = `
+        <!-- Coluna de Itens -->
+        <div class="cart-items-panel" id="cart-rows-container">
+          <!-- Gerado via JS -->
+        </div>
+
+        <!-- Coluna de Resumo -->
+        <div class="summary-panel">
+          <h2 class="summary-title">Resumo do Pedido</h2>
+          
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="summary-subtotal">R$ 0,00</span>
+          </div>
+          
+          <div class="summary-row">
+            <span>Envio (Frete)</span>
+            <span style="color: var(--color-success); font-weight: 500;">Grátis</span>
+          </div>
+
+          <div class="summary-total">
+            <span>Total</span>
+            <span id="summary-total-value">R$ 0,00</span>
+          </div>
+
+          <button class="btn btn-primary checkout-btn" id="btn-to-checkout">
+            Finalizar Compra <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+          </button>
+          
+          <div style="display: flex; justify-content: center; gap: 16px; margin-top: 24px; font-size: 18px; color: var(--color-text-muted);">
+            <i class="fa-brands fa-cc-visa" title="Visa"></i>
+            <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+            <i class="fa-brands fa-pix" style="color: #32BCAD;" title="Pix"></i>
+            <i class="fa-solid fa-lock" title="Compra 100% Protegida"></i>
+          </div>
+        </div>
+      `;
+
+      // Preenche os itens na coluna
+      const rowsContainer = document.getElementById("cart-rows-container");
+      rowsContainer.innerHTML = items.map(item => {
+        const isCustom = item.size === "Customizado" && item.customMeasures;
+        const measuresText = isCustom 
+          ? `<span class="custom-badge">Sob Medida: B:${item.customMeasures.busto} C:${item.customMeasures.cintura} Q:${item.customMeasures.quadril} cm</span>`
+          : `<span class="custom-badge" style="background-color: var(--color-champagne); color: var(--color-text-dark);">Tamanho: ${item.size}</span>`;
+
+        return `
+          <div class="cart-item-row" data-id="${item.id}" data-size="${item.size}" data-key="${item.customKey}">
+            <img src="${item.image || './assets/images/placeholder.jpeg'}" alt="${item.name}" class="cart-item-img">
+            
+            <div class="cart-item-details">
+              <h3>${item.name}</h3>
+              <div class="cart-item-meta">
+                <span>Cód. ${item.code}</span>
+                ${measuresText}
+              </div>
+            </div>
+
+            <div class="qty-controls">
+              <button class="btn-qty-minus">-</button>
+              <span>${item.quantity}</span>
+              <button class="btn-qty-plus">+</button>
+            </div>
+
+            <div class="item-price-col">
+              R$ ${(item.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </div>
+
+            <button class="btn-remove" title="Remover item">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </div>
+        `;
+      }).join("");
+
+      // Atualiza valores do resumo
+      document.getElementById("summary-subtotal").textContent = `R$ ${totals.subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+      document.getElementById("summary-total-value").textContent = `R$ ${totals.subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+
+      // Configura os escutadores para os botões dos itens
+      setupRowEventListeners();
+    }
+
+    function setupRowEventListeners() {
+      const rows = document.querySelectorAll(".cart-item-row");
+      rows.forEach(row => {
+        const id = row.getAttribute("data-id");
+        const size = row.getAttribute("data-size");
+        const key = row.getAttribute("data-key");
+        const qtySpan = row.querySelector(".qty-controls span");
+        let qty = parseInt(qtySpan.textContent);
+
+        // Menos quantidade
+        row.querySelector(".btn-qty-minus").addEventListener("click", () => {
+          if (qty > 1) {
+            qty--;
+            updateCartItemQuantity(id, size, key, qty);
+            updateCartUI();
+          }
+        });
+
+        // Mais quantidade
+        row.querySelector(".btn-qty-plus").addEventListener("click", () => {
+          qty++;
+          updateCartItemQuantity(id, size, key, qty);
+          updateCartUI();
+        });
+
+        // Remover item
+        row.querySelector(".btn-remove").addEventListener("click", () => {
+          removeFromCart(id, size, key);
+          updateCartUI();
+        });
+      });
+
+      // Ir para checkout
+      document.getElementById("btn-to-checkout").addEventListener("click", () => {
+        location.href = "./checkout.html";
+      });
+    }
+
+    // Inicialização da tela
+    updateCartUI();
+    
+    // Escuta mudanças de carrinho disparadas por outros componentes
+    window.addEventListener("cartUpdated", updateCartUI);
+  </script>
+
+  <!-- App-like Bottom Tab Bar for Mobile -->
+  <div class="mobile-tab-bar">
+    <a href="./index.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-house"></i>
+      <span>Início</span>
+    </a>
+    <a href="./produtos.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-shapes"></i>
+      <span>Coleção</span>
+    </a>
+    <a href="./carrinho.html" class="mobile-tab-item active">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>Carrinho</span>
+      <span class="badge">0</span>
+    </a>
+    <a href="./login.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-user"></i>
+      <span>Conta</span>
+    </a>
+  </div>
+</body>
+</html>

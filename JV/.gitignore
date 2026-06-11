@@ -1,0 +1,20 @@
+# Windows / System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# IDE / Editor configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary files & Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido Confirmado | JV Malhas Compressivas</title>
+  <link rel="stylesheet" href="./assets/css/style.css?v=2.0">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos Adicionais Baseados nos Prints Enviados (Aesthetics 2026) */
+    .pill-nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 90px;
+      padding: 0 40px;
+    }
+    .nav-pill-menu {
+      display: flex;
+      align-items: center;
+      background: rgba(45, 37, 32, 0.05);
+      border: 1px solid var(--color-border);
+      border-radius: 50px;
+      padding: 6px;
+      backdrop-filter: var(--glass-blur);
+    }
+    .nav-pill-menu a {
+      padding: 10px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border-radius: 50px;
+      transition: var(--transition);
+      text-transform: uppercase;
+    }
+    .nav-pill-menu a.active, .nav-pill-menu a:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+    }
+    .pill-badge-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-white);
+      border: 1px solid var(--color-charcoal);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .pill-badge-btn:hover {
+      background-color: var(--color-charcoal);
+      color: var(--color-white);
+      transform: translateY(-2px);
+    }
+
+    /* Layout da Confirmação */
+    .success-container {
+      max-width: 680px;
+      margin: 80px auto 120px auto;
+      text-align: center;
+    }
+
+    .success-card {
+      background: rgba(253, 251, 247, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 50px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: rgba(95, 125, 101, 0.15);
+      color: var(--color-success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 30px auto;
+      border: 1px solid var(--color-success);
+      box-shadow: 0 0 20px rgba(95, 125, 101, 0.2);
+    }
+
+    .order-number {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--color-gold);
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .success-title {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .success-desc {
+      color: var(--color-text-muted);
+      font-size: 16px;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    /* Caixa do PIX */
+    .pix-payment-box {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background-color: var(--color-white);
+      padding: 30px;
+      margin-top: 30px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pix-qrcode {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 20px auto;
+      border: 1px solid var(--color-border);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      display: block;
+    }
+
+    .pix-key-container {
+      margin-top: 20px;
+    }
+
+    .pix-key-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .pix-key-input-wrapper {
+      display: flex;
+      gap: 10px;
+      background: var(--bg-cream);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 6px 6px 6px 16px;
+      align-items: center;
+    }
+
+    .pix-key-text {
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--color-text-dark);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .btn-copy-pix {
+      padding: 10px 18px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-approved-box {
+      border: 1px solid rgba(95, 125, 101, 0.3);
+      background-color: rgba(95, 125, 101, 0.08);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      color: var(--color-success);
+      font-weight: 500;
+      margin-top: 30px;
+    }
+
+    .card-approved-box i {
+      font-size: 28px;
+      margin-bottom: 12px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Premium -->
+  <header id="main-header">
+    <div class="container pill-nav-container">
+      <a href="./index.html" class="logo" style="display: flex; align-items: center; height: 65px; padding: 5px 0;">
+        <img src="./assets/images/logo.svg" alt="Juliana Veloso Logo" style="height: 100%; width: auto;">
+      </a>
+      
+      <!-- Menu de Navegação Pílula -->
+      <nav class="nav-pill-menu">
+        <a href="./index.html">Início</a>
+        <a href="./produtos.html">Coleção</a>
+        <a href="./carrinho.html">Carrinho</a>
+        <a id="admin-link" href="./admin.html" style="display: none;">Painel</a>
+      </nav>
+      
+      <div class="nav-actions">
+        <!-- Conta e Login -->
+        <a href="./login.html" id="user-btn" class="pill-badge-btn">
+          <i class="fa-regular fa-user"></i>
+          <span id="user-name-txt">Entrar</span>
+        </a>
+        
+        <!-- Carrinho de Compras -->
+        <a href="./carrinho.html" class="nav-btn" style="margin-left: 8px;">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="badge" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Corpo -->
+  <main class="container">
+    <div class="success-container">
+      <div class="success-card">
+        <div class="success-icon">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        
+        <span class="order-number" id="order-id-label">Pedido #JV-000000</span>
+        <h1 class="success-title">Obrigado pela sua compra!</h1>
+        <p class="success-desc">
+          Enviamos uma confirmação detalhada do pedido para o seu e-mail. Você também pode acompanhar o status do envio diretamente no seu WhatsApp cadastrado.
+        </p>
+
+        <!-- Detalhes do Pagamento -->
+        <div id="payment-details-box">
+          <!-- Gerado via JS -->
+        </div>
+
+        <div style="margin-top: 40px; display: flex; justify-content: center; gap: 16px;">
+          <a href="./produtos.html" class="btn btn-outline" style="padding: 12px 24px;">Voltar ao Catálogo</a>
+          <a href="./index.html" class="btn btn-primary" style="padding: 12px 24px;">Ir para Home</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <h2>JV MALHAS</h2>
+        <p>A união perfeita entre ciência médica e elegância estética na produção de malhas modeladoras compressivas de altíssimo padrão.</p>
+        <div class="footer-socials">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Coleção</h3>
+        <ul>
+          <li><a href="./produtos.html?categoria=modeladores">Modeladores</a></li>
+          <li><a href="./produtos.html?categoria=sutias">Sutiãs Cirúrgicos</a></li>
+          <li><a href="./produtos.html?categoria=cintas">Cintas Modeladoras</a></li>
+          <li><a href="./produtos.html?categoria=calcas">Calças Culote</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Menu</h3>
+        <ul>
+          <li><a href="./index.html">Início</a></li>
+          <li><a href="./produtos.html">Coleções</a></li>
+          <li><a href="./carrinho.html">Ver Carrinho</a></li>
+          <li><a href="./login.html">Minha Conta</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Contato & Info</h3>
+        <ul>
+          <li><a href="#"><i class="fa-solid fa-phone"></i> (31) 99876-5432</a></li>
+          <li><a href="#"><i class="fa-solid fa-envelope"></i> suporte@jvmalhas.com.br</a></li>
+          <li><a href="#"><i class="fa-solid fa-shield-halved"></i> Compra 100% Protegida</a></li>
+          <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Envio para todo o Brasil</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container footer-bottom">
+      <p>&copy; 2026 JV Malhas Compressivas. Todos os direitos reservados. Catálogo Yoga Indústria.</p>
+      <p>Desenvolvido com <i class="fa-solid fa-heart" style="color: var(--color-gold);"></i> por Antigravity</p>
+    </div>
+  </footer>
+
+  <!-- Firebase Logic Integration (ES Modules) -->
+  <script type="module">
+    import { subscribeToAuth, isAdmin } from "./assets/js/auth.js";
+    import { getCartTotals } from "./assets/js/cart.js";
+
+    // Atualiza o estado da navbar baseado na autenticação
+    subscribeToAuth((user) => {
+      const userNameTxt = document.getElementById("user-name-txt");
+      const userBtn = document.getElementById("user-btn");
+      const adminLink = document.getElementById("admin-link");
+
+      if (user) {
+        userNameTxt.textContent = user.displayName ? user.displayName.split(" ")[0] : "Minha Conta";
+        userBtn.href = "./login.html";
+        if (isAdmin()) {
+          adminLink.style.display = "inline-block";
+        } else {
+          adminLink.style.display = "none";
+        }
+      } else {
+        userNameTxt.textContent = "Entrar";
+        userBtn.href = "./login.html";
+        adminLink.style.display = "none";
+      }
+    });
+
+    // Atualiza o número de itens no carrinho (atualiza todos os badges)
+    function updateCartCount() {
+      const totals = getCartTotals();
+      const badges = document.querySelectorAll(".badge");
+      badges.forEach(b => {
+        b.textContent = totals.count;
+      });
+    }
+    updateCartCount();
+
+    // Detalha o sucesso do pedido
+    function renderSuccessDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get("orderId") || "JV-" + Math.floor(100000 + Math.random() * 900000);
+      const paymentMethod = params.get("payment") || "Pix";
+      const totalVal = parseFloat(params.get("total") || 0);
+
+      document.getElementById("order-id-label").textContent = `Pedido #${orderId}`;
+
+      const paymentBox = document.getElementById("payment-details-box");
+
+      if (paymentMethod === "Pix") {
+        // Gera chave aleatória Pix Copia e Cola
+        const mockPixKey = `00020126580014br.gov.bcb.pix0136jv-malhas-pix-key-random-uuid-${orderId}5204000053039865406${totalVal.toFixed(2)}5802BR5915JV_MALHAS_LTDA6009ITABIRITO62070503***6304D1B9`;
+
+        paymentBox.innerHTML = `
+          <div class="pix-payment-box">
+            <h3 style="font-family: var(--font-serif); font-size: 20px; margin-bottom: 16px;">
+              Pague com Pix para aprovação imediata
+            </h3>
+            
+            <!-- QR Code (Usaremos uma API pública livre de chaves para gerar o QR code Pix real com base no texto copia e cola!) -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(mockPixKey)}" alt="QR Code Pix" class="pix-qrcode">
+            
+            <p style="font-size: 13px; color: var(--color-text-muted); max-width: 450px; margin: 0 auto 20px auto;">
+              Escaneie o QR Code acima usando o aplicativo do seu banco ou copie e cole a chave Pix abaixo.
+            </p>
+
+            <div class="pix-key-container">
+              <span class="pix-key-label">Código Pix Copia e Cola</span>
+              <div class="pix-key-input-wrapper">
+                <span class="pix-key-text" id="pix-key-str">${mockPixKey}</span>
+                <button class="btn btn-primary btn-copy-pix" id="btn-copy-pix-key">Copiar Código</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Ativa função copiar chave Pix
+        document.getElementById("btn-copy-pix-key").addEventListener("click", () => {
+          navigator.clipboard.writeText(mockPixKey).then(() => {
+            const btn = document.getElementById("btn-copy-pix-key");
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-check"></i> Copiado!`;
+            btn.style.backgroundColor = "var(--color-success)";
+            btn.style.borderColor = "var(--color-success)";
+            
+            setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.style.backgroundColor = "";
+              btn.style.borderColor = "";
+            }, 2000);
+          });
+        });
+
+      } else {
+        // Cartão de Crédito
+        paymentBox.innerHTML = `
+          <div class="card-approved-box">
+            <i class="fa-solid fa-circle-check"></i>
+            <h3>Pagamento Aprovado com Sucesso!</h3>
+            <p style="font-size: 13px; opacity: 0.9; margin-top: 8px;">
+              Sua transação no cartão de crédito foi concluída. Nossa equipe de produção iniciará a separação e fabricação da sua malha compressiva.
+            </p>
+          </div>
+        `;
+      }
+    }
+
+    renderSuccessDetails();
+  </script>
+
+  <!-- App-like Bottom Tab Bar for Mobile -->
+  <div class="mobile-tab-bar">
+    <a href="./index.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-house"></i>
+      <span>Início</span>
+    </a>
+    <a href="./produtos.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-shapes"></i>
+      <span>Coleção</span>
+    </a>
+    <a href="./carrinho.html" class="mobile-tab-item active">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>Carrinho</span>
+      <span class="badge">0</span>
+    </a>
+    <a href="./login.html" class="mobile-tab-item ">
+      <i class="fa-solid fa-user"></i>
+      <span>Conta</span>
+    </a>
+  </div>
+</body>
+</html>

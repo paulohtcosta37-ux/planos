@@ -182,67 +182,81 @@ def scrape_prefeitura_itauna():
 # ==========================================================================
 
 def analyze_with_gemini(raw_articles, api_key, target_date):
-    """Envia as notícias para o Google Gemini processar e formatar em JSON analítico"""
-    print("[*] Iniciando análise de impacto com a IA Google Gemini...")
+    """Envia as notícias para o Google Gemini processar e formatar em JSON analítico usando busca web em tempo real"""
+    print("[*] Iniciando análise de impacto com a IA Google Gemini e Google Search...")
     
     try:
-        import google.generativeai as genai
+        from google import genai
+        from google.genai import types
     except ImportError:
-        print("[!] Erro: A biblioteca 'google-generativeai' não está instalada.")
-        print("    Rode: pip install google-generativeai")
+        print("[!] Erro: A biblioteca 'google-genai' não está instalada.")
+        print("    Rode: pip install google-genai")
         return None
         
-    # Configurar API
-    genai.configure(api_key=api_key)
-    
-    # Preparar dados coletados para o prompt
+    # Inicializar o cliente
+    try:
+        client = genai.Client(api_key=api_key)
+    except Exception as e:
+        print(f"[!] Erro ao inicializar o cliente Gemini GenAI: {e}")
+        return None
+        
+    # Preparar dados coletados dos scrapers locais para complementar
     formatted_input = ""
     for idx, art in enumerate(raw_articles):
-        formatted_input += f"Notícia #{idx+1} ({art['source']}):\n"
+        formatted_input += f"Notícia Local #{idx+1} ({art['source']}):\n"
         formatted_input += f"Título: {art['title']}\n"
         if art['summary']:
             formatted_input += f"Resumo: {art['summary']}\n"
         formatted_input += f"Link: {art['link']}\n"
         formatted_input += "-" * 30 + "\n"
         
-    # Prompt do Sistema e Instruções
+    # Prompt do Sistema e Instruções refinados para Negócios de Itaúna (últimas 24h)
     prompt = f"""
-Você é um analista de inteligência de mercado experiente, focado exclusivamente na economia e no comércio da cidade de Itaúna, Minas Gerais (Brasil).
+Você é um analista de inteligência de mercado altamente experiente, focado exclusivamente no comércio, negócios, oportunidades de mercado e na economia local da cidade de Itaúna, Minas Gerais (Brasil).
 
-Abaixo estão notícias recentes sobre Itaúna coletadas de portais locais para o dia {target_date}:
+Hoje é dia {target_date}. 
+
+Sua tarefa principal é produzir de 2 a 4 relatórios analíticos de mercado contendo notícias e fatos reais ocorridos estritamente nas últimas 24 horas (dia {target_date} ou o dia imediatamente anterior). 
+
+Para coletar e enriquecer seus relatórios com informações frescas e reais das últimas 24h, você deve realizar pesquisas na web focando nas seguintes fontes em Itaúna-MG:
+1. Publicações recentes nos perfis públicos de Instagram mais influentes da cidade:
+   - Prefeitura de Itaúna (@prefeituradeitauna)
+   - TV Cidade Itaúna (@tvcidadeitauna)
+   - Itaúna Alerta (@itaunaalerta)
+   - Itaúna da Zoeira (@itaunadazoeira)
+2. Notícias recentes de portais locais (Santana FM, Jornal de Itaúna, folha local).
+3. Anúncios, editais e comunicados no site da Universidade de Itaúna (UIT) e das principais escolas/colégios da cidade que possam afetar a dinâmica comercial (ex: volta às aulas, eventos de vestibulares, contratações, etc.).
+4. Portais e comunicados de entidades comerciais, como a CDL Itaúna (Câmara de Dirigentes Lojistas), ACE Itaúna, etc.
+
+CRITÉRIO CRÍTICO DE RELEVÂNCIA:
+Só inclua notícias e fatos que tenham IMPACTO DIRETO E RELEVANTE para comerciantes, lojistas, empresários e prestadores de serviços da cidade (novos negócios abrindo, grandes contratações de empresas locais, eventos na praça que atraem fluxo de clientes, obras de trânsito que alteram o acesso a lojas, mudanças de impostos, etc.). Ignore fofocas, crimes que não afetem o comércio ou notícias genéricas que não gerem desdobramentos de mercado.
+
+Aqui estão algumas notícias brutas coletadas localmente hoje para ajudar como ponto de partida ou referência:
 {formatted_input}
 
-Sua tarefa é filtrar as informações mais relevantes para o comércio, prestadores de serviços, lojistas e empreendedores locais de Itaúna (como novos concorrentes, eventos públicos que atraiam pessoas, obras na cidade, mudanças de tarifas, abertura de novos nichos, venda de empresas, eventos escolares e acadêmicos na Universidade de Itaúna UIT).
-
-Para cada notícia importante selecionada (máximo 4 notícias), crie uma análise estruturada contendo exatamente estes campos:
-1. id: Um UUID aleatório novo.
-2. title: Título focado no ângulo comercial (Ex: 'Revitalização de rua abre espaço para novos negócios' em vez de apenas 'Obras na rua X').
+Para cada fato comercial importante (máximo 4 relatórios de notícias), crie um objeto JSON contendo exatamente estes campos:
+1. id: Um UUID aleatório novo (string).
+2. title: Título comercial focado no impacto de negócios (Ex: 'Grande público de festival gastronômico aquece restaurantes do Centro' ou 'Volta às aulas na UIT deve elevar consumo no bairro Universitário').
 3. category: Uma destas categorias exatas: 'Eventos' | 'Concorrência' | 'Economia Local' | 'Infraestrutura' | 'Oportunidades'.
-4. executiveSummary: Resumo executivo de até 2 frases curtas e diretas sobre o fato.
-5. impactLevel: Nível de impacto no comércio: 'Alto' | 'Médio' | 'Baixo'.
-6. investigativeAnalysis: Análise investigativa detalhada explicando os desdobramentos de mercado na cidade. (Ex: aumento de tráfego de pessoas, alteração de hábitos de consumo, atração de clientes de Divinópolis/Pará de Minas/Mateus Leme, etc).
-7. howToAct: Lista numerada prática com 2 ou 3 ações que os lojistas/comerciantes de Itaúna devem tomar para se preparar ou se proteger.
-8. howToProfit: Ideias criativas e insights práticos sobre como faturar ou lucrar com essa notícia (criação de promoções, parcerias, novos serviços temporários).
-9. image: Caminho de imagem local a ser vinculada de acordo com as seguintes regras de correspondência:
-   * Se a notícia for sobre a Festa Junina ou o Arraial de Itaúna, defina como 'src/img/arraial_itauna_2026.png'.
-   * Se for sobre o Festival Gastronômico ou gastronomia/restaurantes, defina como 'src/img/festival_gastronomico.png'.
-   * Se for sobre a Drogaria Araújo, farmácias ou concorrência no varejo, defina como 'src/img/araujo_jove_soares.png'.
-   * Para qualquer outra notícia, defina como null.
+4. executiveSummary: Resumo executivo de até 2 frases curtas e diretas sobre o fato comercial.
+5. impactLevel: Nível de impacto nas vendas ou operação local: 'Alto' | 'Médio' | 'Baixo'.
+6. investigativeAnalysis: Análise investigativa profunda e criativa explicando o impacto na economia local nas últimas 24h (Ex: fluxo estimado de pessoas, estimativa de venda de vestuário, oportunidades para táxis/entregadores, impactos no varejo de vizinhança, etc.).
+7. howToAct: Lista numerada prática com 2 ou 3 ações claras que os lojistas/comerciantes devem tomar para se preparar ou se proteger.
+8. howToProfit: Insights práticos e inovadores sobre como lucrar com a notícia (promoções casadas, novos kits, estratégias de marketing digital direcionadas).
+9. image: Campo nulo (defina sempre como null, pois as imagens foram removidas do frontend).
 
-ATENÇÃO IMPORTANTE:
-- Caso as notícias coletadas estejam vazias ou não contenham informações de forte relevância comercial direta, utilize seu próprio conhecimento interno avançado sobre a economia, eventos e geografia de Itaúna para criar de 2 a 3 relatórios de negócios fictícios, porém extremamente plausíveis e úteis, para a data de {target_date}.
-- O Arraial de Itaúna 2026 (Festa Junina da Prefeitura na Praça da Matriz) foi anunciado recentemente. Se estiver gerando dados para o dia 10 de Junho de 2026, certifique-se de incluir esta notícia com o nível de impacto 'Alto' e o campo 'image' definido como 'src/img/arraial_itauna_2026.png'.
-- O retorno deve ser exclusivamente uma lista em formato JSON contendo os objetos de notícia. Não inclua nenhuma introdução ou formatação Markdown (como ```json).
-
-Gere a resposta em formato JSON válido estruturado de acordo com o esquema acima.
+O retorno deve ser EXCLUSIVAMENTE uma lista em formato JSON contendo os objetos de notícia. Não inclua nenhuma introdução ou formatação Markdown (como ```json).
 """
 
     try:
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        
-        response = model.generate_content(
-            prompt,
-            generation_config={"response_mime_type": "application/json"}
+        # Habilitar ferramenta de pesquisa integrada no Gemini 2.5 Flash
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                tools=[types.Tool(google_search=types.GoogleSearch())],
+                response_mime_type="application/json"
+            )
         )
         
         news_data = json.loads(response.text)

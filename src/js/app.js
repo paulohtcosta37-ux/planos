@@ -176,7 +176,7 @@ function showEmptyState(isoString) {
     if (emptyStateTitle) {
       emptyStateTitle.innerText = 'Novidades a Caminho!';
     }
-    emptyStateMessage.innerHTML = `As análises e oportunidades do dia <strong>${formattedDateStr}</strong> estão sendo preparadas pela nossa inteligência artificial.<br><span style="display:inline-block; margin-top:14px; font-weight:700; color:var(--primary); font-size: 1.05rem;">Volte após as 18:00 para acompanhar as notícias do dia!</span>`;
+    emptyStateMessage.innerHTML = `As análises e oportunidades do dia <strong>${formattedDateStr}</strong> estão sendo preparadas pela nossa equipe.<br><span style="display:inline-block; margin-top:14px; font-weight:700; color:var(--primary); font-size: 1.05rem;">Volte após as 18:00 para acompanhar as notícias do dia!</span>`;
   } else {
     // Passado
     if (emptyStateIcon) {

@@ -532,28 +532,36 @@ function renderGoogleMap(container, newsItem) {
 // CONFIGURAÇÃO DE EVENTOS
 // ==========================================================================
 function setupEventListeners() {
-  calendarBtn.addEventListener('click', () => {
-    hiddenDateInput.showPicker ? hiddenDateInput.showPicker() : hiddenDateInput.click();
-  });
+  if (calendarBtn) {
+    calendarBtn.addEventListener('click', () => {
+      if (hiddenDateInput) {
+        hiddenDateInput.showPicker ? hiddenDateInput.showPicker() : hiddenDateInput.click();
+      }
+    });
+  }
   
-  hiddenDateInput.addEventListener('change', (e) => {
-    if (e.target.value) {
-      const [year, month, day] = e.target.value.split('-');
-      const selectedDateObj = new Date(year, month - 1, day);
-      selectDate(selectedDateObj);
-    }
-  });
+  if (hiddenDateInput) {
+    hiddenDateInput.addEventListener('change', (e) => {
+      if (e.target.value) {
+        const [year, month, day] = e.target.value.split('-');
+        const selectedDateObj = new Date(year, month - 1, day);
+        selectDate(selectedDateObj);
+      }
+    });
+  }
 
-  modalCloseBtn.addEventListener('click', closeModal);
+  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
 
-  newsModal.addEventListener('click', (e) => {
-    if (e.target === newsModal) {
-      closeModal();
-    }
-  });
+  if (newsModal) {
+    newsModal.addEventListener('click', (e) => {
+      if (e.target === newsModal) {
+        closeModal();
+      }
+    });
+  }
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && newsModal.classList.contains('active')) {
+    if (e.key === 'Escape' && newsModal && newsModal.classList.contains('active')) {
       closeModal();
     }
   });

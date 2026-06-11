@@ -287,6 +287,13 @@ body {
   padding: 4px 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  justify-content: flex-start;
+}
+
+@media (min-width: 768px) {
+  .date-timeline {
+    justify-content: center;
+  }
 }
 
 .date-timeline::-webkit-scrollbar {
